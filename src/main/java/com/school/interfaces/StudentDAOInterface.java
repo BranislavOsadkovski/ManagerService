@@ -19,15 +19,17 @@ public interface StudentDAOInterface {
 	
 	public void deleteStudent(Integer id);
 	
-	public Student getStudent(Integer id);
-
-	public String getStudentName(Integer id);
+	public Student getStudent(Integer id); 
 	
 	public void setStudentImage(Integer id,byte[] image);
 
 	public void executeBatchUpdate(final List<Student> students);
 
 	public void executeBatchObjectUpdate(final List<Student> students);
+
+	public Student getStudentByName(String name);
+
+	public byte[] getStudentImage(Integer id);
 	
 
 }

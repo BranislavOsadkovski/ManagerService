@@ -3,6 +3,7 @@ package com.school.util;
 import java.io.ByteArrayInputStream;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -39,8 +40,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 
 	@Override
 	public void create(String name, Integer age,String email, byte [] image) {
-//		String SQL = "insert into student (name,age,email,image) values (?,?,?,?)";
-//		jdbcTemplate.update(SQL,name,age,email,image);
+ 
 		Map <String,Object> parameters = new HashMap<String, Object>();
 		parameters.put("name", name);
 		parameters.put("age", age);
@@ -85,12 +85,13 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	}
 	
 	@Override
-	public String getStudentName(Integer id) {
-		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withFunctionName("get_student_name");
+	public byte[] getStudentImage(Integer id) {
+		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withFunctionName("get_student_image");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_id", id);
-		String name = jdbcCall.executeFunction(String.class, in);
-		return name;
+		byte [] image = (byte[]) jdbcCall.executeFunction(Object.class, in);
+		return image ;
 	}
+	
 	@Override
 	public void setStudentImage(Integer id,byte [] image) {
 		
@@ -131,5 +132,20 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		NamedParameterJdbcTemplate templateObject = new NamedParameterJdbcTemplate(dataSource);
 		int [] updateCounts = templateObject.batchUpdate(SQL, batch);
 		System.out.println("Batch :" + updateCounts.length);
+	}
+
+	@Override
+	public Student getStudentByName(String name) {
+		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecordByName");
+		SqlParameterSource in = new MapSqlParameterSource().addValue("in_name", name);
+		Map<String,Object> out = jdbcCall.execute(in);
+		Student student = new Student();
+		student.setId((Integer)out.get("out_id"));
+		student.setName(name);
+		student.setAge((Integer)out.get("out_age"));
+		student.setEmail((String)out.get("out_email"));
+		student.setImage((byte[])out.get("out_image"));
+		return student;
+ 
 	}
 }
