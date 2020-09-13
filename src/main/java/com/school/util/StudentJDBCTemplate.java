@@ -66,6 +66,8 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		student.setId(id);
 		student.setName((String)out.get("out_name"));
 		student.setAge((Integer)out.get("out_age"));
+		student.setEmail((String)out.get("out_email"));
+		student.setImage((byte[])out.get("out_image"));
 		return student;
 	}
 

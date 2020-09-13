@@ -1,5 +1,8 @@
 package com.school.objects;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "student")
 public class Student {
 	private int id;
 	private String name;
