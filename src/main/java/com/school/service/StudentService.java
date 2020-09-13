@@ -1,9 +1,12 @@
 package com.school.service;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException; 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest; 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -17,6 +20,7 @@ import com.school.util.StudentJDBCTemplate;
 public class StudentService {
 	 private List <Student> list;
 	 @Inject HttpServletRequest request;
+	 @Inject HttpServletResponse response;
 	 private StudentJDBCTemplate template;
 	 
 	@GET
@@ -48,12 +52,18 @@ public class StudentService {
 	}
 	
 	@GET
-	@Path(value="studentImage/{id}") 
+	@Path(value="{id}/studentImage") 
 	@Produces(MediaType.MULTIPART_FORM_DATA)
-	public byte[] getStudentImage(@PathParam(value = "id")Integer id) {
-		template = (StudentJDBCTemplate)request.getServletContext().getAttribute("studentTemplate"); 
-		byte[] image = template.getStudentImage(id);
-		return image;
+	public void getStudentImage(@PathParam(value = "id")Integer id) {
+			template = (StudentJDBCTemplate)request.getServletContext().getAttribute("studentTemplate"); 
+			byte[] image = template.getStudentImage(id);
+			BufferedOutputStream bos;
+			try {
+				  bos  =new BufferedOutputStream(response.getOutputStream());
+			 bos.write(image);
+			} catch (IOException e) { 
+				e.printStackTrace();
+			} 
 	}
 	
 }
