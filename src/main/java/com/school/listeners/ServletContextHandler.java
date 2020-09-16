@@ -3,8 +3,8 @@ package com.school.listeners;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Enumeration; 
-
+import java.util.Enumeration;
+ 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;  
@@ -25,6 +25,7 @@ public class ServletContextHandler implements ServletContextListener {
 		this.studentTemplate = (StudentJDBCTemplate)ApplicationManager.getSpringAppContext().getBean("studentJDBCTemplate");
 		context.setAttribute("studentTemplate", studentTemplate);
 		System.out.println("ServletContextInit");
+		
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class ServletContextHandler implements ServletContextListener {
 	            }
 	        } 
 	        try { 
-	        	AbandonedConnectionCleanupThread.uncheckedShutdown();
+	        	AbandonedConnectionCleanupThread.checkedShutdown();
 	        }catch(Exception e){e.printStackTrace();}
 	}    
 	

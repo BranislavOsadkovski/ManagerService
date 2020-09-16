@@ -16,9 +16,22 @@
 	      <param-name>jersey.config.server.provider.packages</param-name>
 	      <param-value>com.school.service</param-value>
 	    </init-param>
-  </servlet>
+		  </servlet>
+		
+		   <!-- <multipart-config>
+		    <max-file-size>20848820</max-file-size>
+		    <max-request-size>418018841</max-request-size>
+		    <file-size-threshold>1048576</file-size-threshold>
+		</multipart-config> 
+		<init-param>
+	        <param-name>jersey.config.server.provider.classnames</param-name>
+	        <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
+	    </init-param> -->
+
   <servlet-mapping>
     <servlet-name>Jersey RESTful Application</servlet-name>
     <url-pattern>/rest/*</url-pattern>
+  
   </servlet-mapping>
+  
 </web-app>

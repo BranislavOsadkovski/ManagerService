@@ -13,23 +13,27 @@ public interface StudentDAOInterface {
 	
 	public void create(String name,Integer age,String email,byte [] image);
 	
-	public List<Student> getAllStudents();
+	public Student getStudent(Integer id); 	
+	
+	public Student getStudentByName(String name);
 	
 	public void updateStudent(Integer id,String name,Integer age);
 	
 	public void deleteStudent(Integer id);
-	
-	public Student getStudent(Integer id); 
+
+	public byte[] getStudentImage(Integer id);
 	
 	public void setStudentImage(Integer id,byte[] image);
+	
+	public List<Student> getAllStudents();
 
 	public void executeBatchUpdate(final List<Student> students);
 
 	public void executeBatchObjectUpdate(final List<Student> students);
 
-	public Student getStudentByName(String name);
+	
 
-	public byte[] getStudentImage(Integer id);
+	
 	
 
 }
