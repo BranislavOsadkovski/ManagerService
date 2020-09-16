@@ -51,7 +51,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	}
 
 	@Override
-	public Student getStudent(Integer id) {// created
+	public Student getStudent(Integer id) { 
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecord");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_id", id);
 		Map<String, Object> out = jdbcCall.execute(in);
@@ -65,7 +65,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	}
 
 	@Override
-	public Student getStudentByName(String name) {// created
+	public Student getStudentByName(String name) { 
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecordByName");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_name", name);
 		Map<String, Object> out = jdbcCall.execute(in);
@@ -92,7 +92,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	}
 
 	@Override
-	public byte[] getStudentImage(Integer id) {// created
+	public byte[] getStudentImage(Integer id) { 
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withFunctionName("get_student_image");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_id", id);
 		byte[] image = (byte[]) jdbcCall.executeFunction(Object.class, in);
@@ -114,7 +114,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	}
 
 	@Override
-	public List<Student> getAllStudents() {// created
+	public List<Student> getAllStudents() { 
 
 		String SQL = "select * from student;";
 		List<Student> list = jdbcTemplate.query(SQL, new StudentMapper());
