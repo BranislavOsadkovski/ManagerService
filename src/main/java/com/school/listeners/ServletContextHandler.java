@@ -23,7 +23,7 @@ public class ServletContextHandler implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		ServletContext context = sce.getServletContext();
 		this.studentTemplate = (StudentJDBCTemplate)ApplicationManager.getSpringAppContext().getBean("studentJDBCTemplate");
-		context.setAttribute("studentTemplate", studentTemplate);
+		context.setAttribute("studentJDBCtemplate", studentTemplate);
 		System.out.println("ServletContextInit");
 		
 	}

@@ -39,7 +39,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	}
 
 	@Override
-	public void create(String name, Integer age, String email, byte[] image) {
+	public void create(String name, Integer age, String email, byte[] image) {//created
 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("name", name);
@@ -80,10 +80,9 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	}
 
 	@Override
-	public void updateStudent(Integer id, String name, Integer age) {
-		String SQL = "update student set name=?,age=? where id = ?";
-		jdbcTemplate.update(SQL, name, age, id);
-
+	public void updateStudent(Integer id, String name, Integer age,String email,byte [] image) {
+		String SQL = "update student set name=?,age=?,email=?,image=? where id = ?";
+		jdbcTemplate.update(SQL, name, age, email,image,id);
 	}
 
 	@Override
