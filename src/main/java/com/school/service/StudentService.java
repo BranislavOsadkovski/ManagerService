@@ -1,7 +1,6 @@
 package com.school.service;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.io.BufferedInputStream; 
 import java.io.IOException;
 import java.io.InputStream; 
 import java.util.List; 
@@ -20,8 +19,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;  
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
+ 
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.school.objects.Student;
@@ -109,7 +107,7 @@ public class StudentService  {
 			 
 	}
 	
-	@POST
+	@PUT
 	@Path(value="setstudentimage")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response setStudentImage(@FormDataParam(value="id")Integer id,@FormDataParam(value="image")InputStream stream) throws IOException, ServletException {
