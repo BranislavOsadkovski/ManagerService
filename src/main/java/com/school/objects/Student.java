@@ -1,5 +1,6 @@
 package com.school.objects;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "student")
@@ -10,38 +11,47 @@ public class Student {
 	private String email;
 	private byte[] image;
 	
-	public String getEmail() {
-		return email;
+	@XmlElement
+	public void setId(int id) {
+		this.id = id;
 	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public byte[] getImage() {
-		return image;
-	}
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
-
-	
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
-		this.id = id;
+	@XmlElement
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
+	@XmlElement
+	public void setAge(int age) {
+		this.age = age;
 	}
 	public int getAge() {
 		return age;
 	}
-	public void setAge(int age) {
-		this.age = age;
+	@XmlElement
+	public void setEmail(String email) {
+		this.email = email;
+	}	
+	public String getEmail() {
+		return email;
 	}
 
+	@XmlElement
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+
+	
+	
+	
 	
 }
