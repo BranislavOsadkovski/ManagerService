@@ -1,12 +1,10 @@
 package com.school.service;
 
-import java.io.BufferedInputStream; 
-import java.io.IOException;
+import java.io.BufferedInputStream;  
 import java.io.InputStream; 
 import java.util.List; 
 
-import javax.inject.Inject;
-import javax.servlet.ServletException;
+import javax.inject.Inject; 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse; 
 import javax.ws.rs.Consumes;
@@ -93,7 +91,7 @@ public class StudentService  {
 	@GET
 	@Path(value="{id}/studentImage") 
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getStudentImage(@PathParam(value = "id")Integer id) throws IOException {
+	public Response getStudentImage(@PathParam(value = "id")Integer id) {
 			 Response r = null;
 			template = (StudentJDBCTemplate)request.getServletContext().getAttribute("studentJDBCtemplate"); 
 			byte[] image = template.getStudentImage(id);
@@ -110,7 +108,7 @@ public class StudentService  {
 	@PUT
 	@Path(value="setstudentimage")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response setStudentImage(@FormDataParam(value="id")Integer id,@FormDataParam(value="image")InputStream stream) throws IOException, ServletException {
+	public Response setStudentImage(@FormDataParam(value="id")Integer id,@FormDataParam(value="image")InputStream stream){
 	
 		template = (StudentJDBCTemplate)request.getServletContext().getAttribute("studentJDBCtemplate"); 
 	 
