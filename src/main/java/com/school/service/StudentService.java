@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStream; 
 import java.util.List; 
 
-import javax.inject.Inject; 
-import javax.servlet.ServletException; 
+import javax.inject.Inject;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse; 
 import javax.ws.rs.Consumes; 
@@ -18,11 +18,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream; 
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.school.objects.Student;
-import com.school.util.StudentJDBCTemplate; 
-import com.sun.jersey.multipart.FormDataParam;  
+import com.school.util.StudentJDBCTemplate;
+ 
  
 
 @Path(value = "StudentService")
@@ -34,14 +35,14 @@ public class StudentService  {
  
 	
 	 
-//	 @POST
-//	 @Path(value="newstudent")  
-//	 @Context
-//	 public Response createStudent(@FormDataParam(value="name")String name,@FormDataParam (value="id") String id) {
-//		 
-//		 System.out.println(name+id);
-//		 return Response.ok().build();
-//	} 
+	 @POST
+	 @Path(value="newstudent")   
+	 @Consumes(MediaType.MULTIPART_FORM_DATA)
+	 public String createStudent(@FormDataParam(value="name")String name,@FormDataParam (value="id") String id) {
+		 
+		 System.out.println(name+id);
+		 return name;
+	} 
 	 
 	@GET
 	@Path(value="student/{id}") 
@@ -84,11 +85,11 @@ public class StudentService  {
 	@POST
 	@Path(value="setstudentimage")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response setStudentImage(@FormDataParam(value="image")InputStream stream) throws IOException, ServletException {
+	public Response setStudentImage(@FormDataParam(value="id")Integer id,@FormDataParam(value="image")InputStream stream) throws IOException, ServletException {
 	
 		template = (StudentJDBCTemplate)request.getServletContext().getAttribute("studentTemplate"); 
 	 
-		template.setStudentImage(6, imageBytes(stream)); 
+		template.setStudentImage(id, imageBytes(stream)); 
 		 
 		return Response.ok().build();
 	}

@@ -7,40 +7,10 @@
   <version>1.0-SNAPSHOT</version>
   <name>school Maven Webapp</name>
   <url>http://maven.apache.org</url>
-  <dependencies>
-  <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
-
- 	<!-- <dependency>
-    <groupId>commons-fileupload</groupId>
-    <artifactId>commons-fileupload</artifactId>
-    <version>1.4</version>
-</dependency>
-  
-   <dependency>
-            <groupId>org.glassfish.jersey</groupId>
-            <artifactId>jersey-bom</artifactId>
-            <version>2.26-b03</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>https://mvnrepository.com/artifact/com.servlets/cos 
---><!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
-
-	<dependency>
-	        <groupId>org.glassfish.jersey.core</groupId>
-	        <artifactId>jersey-client</artifactId>
-	        <version>2.22.1</version>
-	    </dependency>
-    	  <dependency>
-	    <groupId>org.glassfish.jersey.media</groupId>
-	    <artifactId>jersey-media-multipart</artifactId>
-	    <version>2.31</version>
-	</dependency>
- 		 <dependency>
-		    <groupId>com.sun.jersey.contribs</groupId>
-		    <artifactId>jersey-multipart</artifactId>
-		    <version>1.19.4</version>
-		</dependency> 
-	    <dependency>
+  <dependencies>  
+ 
+	   	 
+	 <dependency>
 	      <groupId>junit</groupId>
 	      <artifactId>junit</artifactId>
 	      <version>3.8.1</version>
@@ -61,7 +31,11 @@
 			    <artifactId>mysql-connector-java</artifactId>
 			    <version>8.0.18</version> 
 			</dependency>
-			
+			 <dependency>
+	    <groupId>org.glassfish.jersey.media</groupId>
+	    <artifactId>jersey-media-multipart</artifactId>
+	    <version>2.27</version>
+	</dependency>
 			<dependency>
 				<groupId>org.glassfish.jersey.core</groupId>
 				<artifactId>jersey-server</artifactId>
