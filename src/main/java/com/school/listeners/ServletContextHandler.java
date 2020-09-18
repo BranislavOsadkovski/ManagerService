@@ -17,11 +17,11 @@ import com.school.util.StudentJDBCTemplate;
 public class ServletContextHandler implements ServletContextListener {
 	 
 	private StudentJDBCTemplate studentTemplate;
-
+	private ServletContext context;
 	 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		ServletContext context = sce.getServletContext();
+		context = sce.getServletContext();
 		this.studentTemplate = (StudentJDBCTemplate)ApplicationManager.getSpringAppContext().getBean("studentJDBCTemplate");
 		context.setAttribute("studentJDBCtemplate", studentTemplate);
 		System.out.println("ServletContextInit");
@@ -30,6 +30,9 @@ public class ServletContextHandler implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
+	
+			ApplicationManager.closeSpringApplicationContext();
+		
 		 Enumeration<Driver> drivers = DriverManager.getDrivers();     
 
 	        Driver driver = null;
