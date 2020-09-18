@@ -45,7 +45,7 @@ public class ServletContextHandler implements ServletContextListener {
 	            }
 	        } 
 	        try { 
-	        	AbandonedConnectionCleanupThread.checkedShutdown();
+	        	AbandonedConnectionCleanupThread.uncheckedShutdown();
 	        }catch(Exception e){e.printStackTrace();}
 	}    
 	

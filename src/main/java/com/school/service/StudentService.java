@@ -1,18 +1,12 @@
 package com.school.service;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
+import java.io.BufferedInputStream; 
+import java.io.InputStream; 
 import java.util.List; 
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import javax.inject.Singleton;  
+import javax.servlet.http.HttpServletRequest;  
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -136,18 +130,12 @@ public class StudentService  {
 	@Path(value="students")
 	@Consumes(MediaType.MULTIPART_FORM_DATA) 
 	public Response batchUpdate(@FormDataParam(value="batch")List<Student> batch)   {
-		List<Student>students =  batch;
-		for(Student s : students) {
-			System.out.println(s.getName());
-		}
+		List<Student>students =  batch; 
 		template = (StudentJDBCTemplate)request.getServletContext().getAttribute("studentJDBCtemplate"); 
-		template.executeBatchUpdate(students);
+		template.executeBatchObjectUpdate(students);
 		return Response.ok().build();
 	}
-	public Response multipleBatchUpdate() {
-		
-		return Response.ok().build();
-	}
+	 
 	public static byte[] imageBytes(InputStream inputStream ) {
 		StringBuffer img= new StringBuffer();
 		

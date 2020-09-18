@@ -26,9 +26,7 @@ public interface StudentDAOInterface {
 	public void setStudentImage(Integer id,byte[] image);
 	
 	public List<Student> getAllStudents();
-
-	public void executeBatchUpdate(final List<Student> students);
-
+ 
 	public void executeBatchObjectUpdate(final List<Student> students);
 
 	

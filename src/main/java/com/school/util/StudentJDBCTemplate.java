@@ -1,8 +1,6 @@
 package com.school.util;
 
-import java.io.ByteArrayInputStream;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.io.ByteArrayInputStream; 
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +8,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -120,37 +117,13 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		List<Student> list = jdbcTemplate.query(SQL, new StudentMapper());
 		return list;
 	}
-	
-	@Override
-	public void executeBatchUpdate(final List<Student> students) {
-
-		String SQL = "update student set name=?,age=?,email=?,image=? where id=?";
-		int[] updateCounts = jdbcTemplate.batchUpdate(SQL, new BatchPreparedStatementSetter() {
-
-			@Override
-			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				ps.setString(1, students.get(i).getName());
-				ps.setInt(2,students.get(i).getAge() );
-				ps.setString(3, students.get(i).getEmail()); 
-				ps.setBytes(4, students.get(i).getImage());
-				ps.setInt(5, students.get(i).getId());
-				
-			}
-
-			@Override
-			public int getBatchSize() {
-				return students.size();
-			}
-		});
-
-	}
-
+	 
 	@Override
 	public void executeBatchObjectUpdate(final List<Student> students) {
-		String SQL = "update student set age =:age where id = :id";
+		String SQL = "update student set name=:name,age=:age,email=:email,image=:image where id=:id";
 		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(students.toArray());
 		NamedParameterJdbcTemplate templateObject = new NamedParameterJdbcTemplate(dataSource);
-		int[] updateCounts = templateObject.batchUpdate(SQL, batch); 
+		templateObject.batchUpdate(SQL, batch); 
 	}
 
 }
