@@ -1,12 +1,18 @@
 package com.school.service;
 
-import java.io.BufferedInputStream;  
-import java.io.InputStream; 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
 import java.util.List; 
 
-import javax.inject.Inject; 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse; 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -24,12 +30,11 @@ import com.school.objects.Student;
 import com.school.util.StudentJDBCTemplate;
  
  
-
+@Singleton
 @Path(value = "StudentService")
 public class StudentService  {
 	 private List <Student> list;
-	 @Inject HttpServletRequest request;
-	 @Inject HttpServletResponse response;
+	 private@Inject HttpServletRequest request; 
 	 private StudentJDBCTemplate template;
  
 	
@@ -118,7 +123,7 @@ public class StudentService  {
 	}
 	
 	@GET
-	@Path(value="getallstudents")
+	@Path(value="students")
 	@Produces(MediaType.APPLICATION_XML)
 	public List<Student> getAllStudents() {
 		 list=null; 
@@ -127,8 +132,16 @@ public class StudentService  {
 				return list;
 		
 	}
-	public Response batchUpdate() {
-		
+	@PUT
+	@Path(value="students")
+	@Consumes(MediaType.MULTIPART_FORM_DATA) 
+	public Response batchUpdate(@FormDataParam(value="batch")List<Student> batch)   {
+		List<Student>students =  batch;
+		for(Student s : students) {
+			System.out.println(s.getName());
+		}
+		template = (StudentJDBCTemplate)request.getServletContext().getAttribute("studentJDBCtemplate"); 
+		template.executeBatchUpdate(students);
 		return Response.ok().build();
 	}
 	public Response multipleBatchUpdate() {
@@ -151,5 +164,5 @@ public class StudentService  {
 		return arr;
 		
 	}
-	
+	 
 }

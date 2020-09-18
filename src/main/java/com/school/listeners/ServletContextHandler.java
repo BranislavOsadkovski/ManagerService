@@ -7,7 +7,7 @@ import java.util.Enumeration;
  
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;  
+import javax.servlet.ServletContextListener; 
 
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread; 
 import com.school.util.ApplicationManager;
@@ -25,7 +25,7 @@ public class ServletContextHandler implements ServletContextListener {
 		this.studentTemplate = (StudentJDBCTemplate)ApplicationManager.getSpringAppContext().getBean("studentJDBCTemplate");
 		context.setAttribute("studentJDBCtemplate", studentTemplate);
 		System.out.println("ServletContextInit");
-		
+ 
 	}
 
 	@Override

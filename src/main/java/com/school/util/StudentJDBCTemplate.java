@@ -124,13 +124,17 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	@Override
 	public void executeBatchUpdate(final List<Student> students) {
 
-		String SQL = "update student set age=? where id=?";
+		String SQL = "update student set name=?,age=?,email=?,image=? where id=?";
 		int[] updateCounts = jdbcTemplate.batchUpdate(SQL, new BatchPreparedStatementSetter() {
 
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				ps.setInt(1, students.get(i).getAge());
-				ps.setInt(2, students.get(i).getId());
+				ps.setString(1, students.get(i).getName());
+				ps.setInt(2,students.get(i).getAge() );
+				ps.setString(3, students.get(i).getEmail()); 
+				ps.setBytes(4, students.get(i).getImage());
+				ps.setInt(5, students.get(i).getId());
+				
 			}
 
 			@Override
@@ -138,7 +142,6 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 				return students.size();
 			}
 		});
-		System.out.println("Batch :" + updateCounts.length);
 
 	}
 
@@ -147,8 +150,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		String SQL = "update student set age =:age where id = :id";
 		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(students.toArray());
 		NamedParameterJdbcTemplate templateObject = new NamedParameterJdbcTemplate(dataSource);
-		int[] updateCounts = templateObject.batchUpdate(SQL, batch);
-		System.out.println("Batch :" + updateCounts.length);
+		int[] updateCounts = templateObject.batchUpdate(SQL, batch); 
 	}
 
 }
