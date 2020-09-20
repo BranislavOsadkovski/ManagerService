@@ -17,7 +17,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;  
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
- 
+
+import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.school.objects.Student;
@@ -30,7 +31,7 @@ public class StudentService  {
 	 private List <Student> list;
 	 private@Inject HttpServletRequest request; 
 	 private StudentJDBCTemplate template;
- 
+	 final static Logger logger= Logger.getLogger(StudentService.class);
 	
 	 
 	 @POST
@@ -42,8 +43,12 @@ public class StudentService  {
 								 @FormDataParam(value="image")InputStream stream) {
 		
 		 template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-		 template.create(name, age, email, imageBytes(stream));
-		 System.out.println(name+age);
+		 try {
+			 template.create(name, age, email, imageBytes(stream));
+		 } catch(Exception ex) {
+			 logger.error(ex.getMessage());
+		 }
+ 
 		 return name;
 	} 
 	 
@@ -147,7 +152,7 @@ public class StudentService  {
 				content=bos.read();
 			}
 		
-			}catch(Exception  ex) {ex.printStackTrace();}		 
+			}catch(Exception  ex) {logger.error(ex.getMessage());}		 
 		byte[] arr = img.toString().getBytes();
 		return arr;
 		

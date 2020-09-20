@@ -116,6 +116,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		String SQL = "select * from student;";
 		List<Student> list = jdbcTemplate.query(SQL, new StudentMapper());
 		return list;
+		
 	}
 	 
 	@Override
