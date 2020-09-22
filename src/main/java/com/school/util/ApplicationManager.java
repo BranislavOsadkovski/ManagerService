@@ -10,8 +10,8 @@ public class ApplicationManager {
 	public static ConfigurableApplicationContext getSpringAppContext() {
 		if(springAppContext==null) {
 			 try {
-				 springAppContext = new ClassPathXmlApplicationContext("Beans.xml");
-				 logger.info("Injecting Beans configuration");
+				 logger.warn("Injecting Beans configuration. Connecting to database");
+				 springAppContext = new ClassPathXmlApplicationContext("Beans.xml"); 
 			 }catch(Exception ex) {
 				 logger.error(ex.getMessage());
 			 }
@@ -22,6 +22,7 @@ public class ApplicationManager {
 	}
 	
 	public static void closeSpringApplicationContext() {
+		logger.warn("Closing database connection");
 		springAppContext.close();
 	}
 }

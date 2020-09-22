@@ -24,10 +24,10 @@ public class ServletContextHandler implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		context = sce.getServletContext();
-		logger.info("ContextHandler initialized");
+		logger.info("Context initialized");
 		try {
+			logger.warn("Initializing Database Connection");
 			studentTemplate = (StudentJDBCTemplate)ApplicationManager.getSpringAppContext().getBean("studentJDBCTemplate");
-			logger.info("Connecting to database");
 		}catch(Exception ex) {
 			logger.error(ex.getMessage());
 		}
@@ -37,11 +37,12 @@ public class ServletContextHandler implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-			logger.info("Destroying ServletContext");
+			logger.info("Destroying Context");
 			
 			try {
+				logger.info("Closing Resources");
 			ApplicationManager.closeSpringApplicationContext();
-			logger.info("Closing database connection");
+			
 			}catch(Exception ex) {
 				logger.error(ex.getMessage());
 			}
