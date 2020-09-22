@@ -36,7 +36,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	}
 
 	@Override
-	public void create(String name, Integer age, String email, byte[] image) {//created
+	public void create(String name, Integer age, String email, byte[] image) {
 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("name", name);

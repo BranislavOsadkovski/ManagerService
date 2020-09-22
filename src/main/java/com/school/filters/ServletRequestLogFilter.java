@@ -1,7 +1,8 @@
 package com.school.filters;
 
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Collection; 
+import java.util.Iterator;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -11,6 +12,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 
 import org.apache.log4j.Logger;
 
@@ -28,12 +30,17 @@ public class ServletRequestLogFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		Enumeration<String> params = httpRequest.getParameterNames();
-		while (params.hasMoreElements()) {
-			String name = params.nextElement();
-			String value = request.getParameter(name);
-			logger.info("Client Address : " + httpRequest.getRemoteAddr() + " Parameter={" + name + " : " + value + "}");
+		Collection<Part> params = httpRequest.getParts();
+		Iterator<Part> iter = params.iterator();
+		String log = "Client Address : " + httpRequest.getRemoteAddr() + "; ";
+		StringBuffer buffer = new StringBuffer(log);
+		while (iter.hasNext()) {
+			Part part = (Part) iter.next();
+			buffer.append("Param={" + part.getName() + " : " + part.toString() + "};");
 		}
+
+		logger.info(log);
+
 		Cookie[] cookies = httpRequest.getCookies();
 		if (cookies != null) {
 			for (Cookie c : cookies) {
