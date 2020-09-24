@@ -38,11 +38,10 @@ public class StudentService {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public String createStudent(@FormDataParam(value = "name") String name, @FormDataParam(value = "age") Integer age,
 			@FormDataParam(value = "email") String email, @FormDataParam(value = "image") InputStream stream) {
-		logger.info("POST parameters={name:" + name + ",age:" + age + ",email:" + email + ",stream:"+ stream.hashCode()+ "}");
-		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+		 template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 	
 		try {
-			logger.warn("Inserting new record into database");
+			logger.info("Inserting new record into database");
 			template.create(name, age, email, imageBytes(stream));
 		} catch (Exception ex) {
 			logger.error(ex.getMessage());
@@ -55,11 +54,11 @@ public class StudentService {
 	@Path(value = "student/{id}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Student getStudent(@PathParam(value = "id") Integer id) {
-		logger.info("GET parameters={id:" + id + "}");
+		 
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 	
 		try {
-			logger.warn("Geting record from database");
+			logger.info("Geting record from database");
 			student = template.getStudent(id);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -71,11 +70,10 @@ public class StudentService {
 	@Path(value = "student/{name: [a-zA-Z][a-zA-Z_0-9]*}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Student getStudentByName(@PathParam(value = "name") String name) {
-		logger.info("GET parameters={name;" + name + "}");
-		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+		 template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 	
 		try {
-			logger.warn("Geting record from database");
+			logger.info("Geting record from database");
 			student = template.getStudentByName(name);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -90,10 +88,9 @@ public class StudentService {
 	public Response updateStudent(@FormDataParam(value = "id") Integer id, @FormDataParam(value = "name") String name,
 			@FormDataParam(value = "age") Integer age, @FormDataParam(value = "email") String email,
 			@FormDataParam(value = "image") InputStream stream) {
-		logger.info("PUT parameters={id:" + id + ",name:" + name + ",age:" + age + ",email:" + email + ",stream:"+ stream.hashCode() + "}");
-		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+		 template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 		try {
-			logger.warn("Updating record in dabatase");
+			logger.info("Updating record in dabatase");
 			template.updateStudent(id, name, age, email, imageBytes(stream));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -105,10 +102,10 @@ public class StudentService {
 	@Path(value = "student")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response deleteStudent(@FormDataParam(value = "id") Integer id) {
-		logger.info("DELETE parameters={id:"+id+"}");
+		 
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 		try{
-			logger.warn("Deleting record from database");
+			logger.info("Deleting record from database");
 			template.deleteStudent(id);
 		}catch(Exception e) {
 			logger.error(e.getMessage());
@@ -120,12 +117,11 @@ public class StudentService {
 	@Path(value = "{id}/studentImage")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getStudentImage(@PathParam(value = "id") Integer id) {
-		Response r = null;
-		logger.info("GET parameters={id:"+id+"}");
+		Response r = null; 
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 		byte[] image = new byte[1024]; 
 				try {
-					logger.warn("Getting record image from database");
+					logger.info("Getting record image from database");
 					image = template.getStudentImage(id); 
 				}catch(Exception e) {
 					logger.error(e.getMessage());
@@ -144,10 +140,10 @@ public class StudentService {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response setStudentImage(@FormDataParam(value = "id") Integer id,
 			@FormDataParam(value = "image") InputStream stream) {
-		logger.info("PUT parameters={id:"+id+"}");
+		 
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 		try { 
-			logger.warn("Setting record image to database");
+			logger.info("Setting record image to database");
 			template.setStudentImage(id, imageBytes(stream));
 			
 		}catch(Exception e) {
@@ -160,10 +156,10 @@ public class StudentService {
 	@Path(value = "students")
 	@Produces(MediaType.APPLICATION_XML)
 	public List<Student> getAllStudents() { 
-		logger.info("GET");
+		 
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 		try {
-			logger.warn("Geting all records from database");
+			logger.info("Geting all records from database");
 			list = template.getAllStudents();
 		
 		}catch(Exception e) {
@@ -177,11 +173,11 @@ public class StudentService {
 	@Path(value = "students")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response batchUpdate(@FormDataParam(value = "batch") List<Student> batch) {
-		logger.info("PUT large update; size="+batch.size());
+	 
 		List<Student> students = batch;
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 		try { 
-			logger.warn("Executing large BATCH update; BATCH size="+list.size()); 
+			logger.info("Executing large BATCH update; BATCH size="+list.size()); 
 			template.executeBatchObjectUpdate(students); 
 		}catch(Exception e) {
 			logger.error(e.getMessage());
