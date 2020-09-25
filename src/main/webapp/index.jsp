@@ -9,6 +9,6 @@
 	   Image : <input type="file" name="image">  <br/>
 	<input type="submit" value="submit">
 </form>
-<img src="http://localhost:8080/school/rest/StudentService/2/studentImage" alt="hell"/> 
+<!-- <img src="http://localhost:8080/school/rest/StudentService/1/studentImage" alt="img"/> -->
 </body>
 </html>
