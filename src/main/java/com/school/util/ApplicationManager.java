@@ -9,11 +9,12 @@ public class ApplicationManager {
 	private static Logger logger  = Logger.getLogger(ApplicationManager.class);
 	public static ConfigurableApplicationContext getSpringAppContext() {
 		if(springAppContext==null) {
+	
 			 try {
-				 logger.warn("Injecting Beans configuration. Connecting to database");
+				 logger.warn("Injecting Beans configuration. ");
 				 springAppContext = new ClassPathXmlApplicationContext("Beans.xml"); 
 			 }catch(Exception ex) {
-				 logger.error(ex.getMessage());
+				 logger.error(ex.getMessage(),ex);
 			 }
 			 	return springAppContext;
 			}else {

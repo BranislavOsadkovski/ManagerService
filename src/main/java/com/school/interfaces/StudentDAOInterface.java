@@ -9,6 +9,8 @@ import com.school.objects.Student;
 
 public interface StudentDAOInterface {
 
+	public DataSource getDataSource() ;
+	
 	public void setDataSource(DataSource data);
 	
 	public void create(String name,Integer age,String email,byte [] image);

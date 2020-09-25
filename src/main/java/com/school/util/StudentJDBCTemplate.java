@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -21,18 +22,23 @@ import org.springframework.jdbc.support.lob.DefaultLobHandler;
 
 import com.school.interfaces.StudentDAOInterface;
 import com.school.objects.Student;
+import com.school.service.StudentService;
 
 public class StudentJDBCTemplate implements StudentDAOInterface {
 	private JdbcTemplate jdbcTemplate;
 	private DataSource dataSource;
 	SimpleJdbcInsert jdbcInsert; // multi-threaded reusable object providing easy insert capabilities for a table
-
+	final static Logger logger = Logger.getLogger(StudentJDBCTemplate.class);
 	@Override
 	@Autowired(required = true)
 	public void setDataSource(DataSource data) {
 		this.dataSource = data;
 		this.jdbcTemplate = new JdbcTemplate(data);
 		this.jdbcInsert = new SimpleJdbcInsert(data).withTableName("student");
+	}
+	@Override
+	public DataSource getDataSource() {
+		return this.dataSource;
 	}
 
 	@Override
@@ -44,7 +50,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		parameters.put("email", email);
 		parameters.put("image", image);
 		jdbcInsert.execute(parameters);
-
+		logger.info("Saving new record into database");
 	}
 
 	@Override
@@ -52,6 +58,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecord");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_id", id);
 		Map<String, Object> out = jdbcCall.execute(in);
+		logger.info("Get record from database by id");
 		Student student = new Student();
 		student.setId(id);
 		student.setName((String) out.get("out_name"));
@@ -66,6 +73,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecordByName");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_name", name);
 		Map<String, Object> out = jdbcCall.execute(in);
+		logger.info("Get record from database by name");
 		Student student = new Student();
 		student.setId((Integer) out.get("out_id"));
 		student.setName(name);
@@ -80,12 +88,14 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	public void updateStudent(Integer id, String name, Integer age,String email,byte [] image) {
 		String SQL = "update student set name=?,age=?,email=?,image=? where id = ?";
 		jdbcTemplate.update(SQL, name, age, email,image,id);
+		logger.info("Updated record in dabatase");
 	}
 
 	@Override
 	public void deleteStudent(Integer id) {
 		String SQL = "delete from student where id = ?";
 		jdbcTemplate.update(SQL, id);
+		logger.info("Deleted record from database");
 	}
 
 	@Override
@@ -93,6 +103,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withFunctionName("get_student_image");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_id", id);
 		byte[] image = (byte[]) jdbcCall.executeFunction(Object.class, in);
+		logger.info("Get image from database");
 		return image;
 	}
 
@@ -107,7 +118,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		String SQL = "update student set image=:image where id= :id";
 		NamedParameterJdbcTemplate jdbcTemplateObject = new NamedParameterJdbcTemplate(dataSource);
 		jdbcTemplateObject.update(SQL, in);
-
+		logger.info("Saved image to database");
 	}
 
 	@Override
@@ -115,6 +126,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 
 		String SQL = "select * from student;";
 		List<Student> list = jdbcTemplate.query(SQL, new StudentMapper());
+		logger.info("Get all records from database");
 		return list;
 		
 	}
@@ -125,6 +137,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(students.toArray());
 		NamedParameterJdbcTemplate templateObject = new NamedParameterJdbcTemplate(dataSource);
 		templateObject.batchUpdate(SQL, batch); 
+		logger.info("Executing large BATCH update; BATCH size=" + students.size());
 	}
 
 }

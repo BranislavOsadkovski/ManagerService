@@ -1,5 +1,5 @@
 package com.school.listeners;
-
+ 
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.log4j.Logger;
+import org.apache.log4j.Logger; 
 
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread; 
 import com.school.util.ApplicationManager;
@@ -18,21 +18,18 @@ import com.school.util.StudentJDBCTemplate;
 
 public class ServletContextHandler implements ServletContextListener {
 	 
-	private StudentJDBCTemplate studentTemplate;
+	private StudentJDBCTemplate studentJDBCTemplate;
 	private ServletContext context;
 	final static Logger logger = Logger.getLogger(ServletContextHandler.class);
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		context = sce.getServletContext();
 		logger.info("Context initialized");
-		try {
+		 
 			logger.warn("Initializing Database Connection");
-			studentTemplate = (StudentJDBCTemplate)ApplicationManager.getSpringAppContext().getBean("studentJDBCTemplate");
-		}catch(Exception ex) {
-			logger.error(ex.getMessage());
-		}
-		
-		context.setAttribute("studentJDBCtemplate", studentTemplate); 	
+			studentJDBCTemplate = (StudentJDBCTemplate)ApplicationManager.getSpringAppContext().getBean("studentJDBCTemplate");
+	 
+		context.setAttribute("studentJDBCtemplate", studentJDBCTemplate); 	
 	}
 
 	@Override
@@ -44,7 +41,7 @@ public class ServletContextHandler implements ServletContextListener {
 			ApplicationManager.closeSpringApplicationContext();
 			
 			}catch(Exception ex) {
-				logger.error(ex.getMessage());
+				logger.error(ex.getMessage(),ex);
 			}
 		 Enumeration<Driver> drivers = DriverManager.getDrivers();     
 
@@ -57,12 +54,12 @@ public class ServletContextHandler implements ServletContextListener {
 	                DriverManager.deregisterDriver(driver);
 
 	            } catch (SQLException ex) {
-	            	logger.info(ex.getMessage());
+	            	logger.error(ex.getMessage(),ex);
 	            }
 	        } 
 	        try { 
 	        	AbandonedConnectionCleanupThread.uncheckedShutdown();
-	        }catch(Exception e){logger.error(e.getMessage());}
+	        }catch(Exception e){logger.error(e.getMessage(),e);}
 	}    
 	
 }

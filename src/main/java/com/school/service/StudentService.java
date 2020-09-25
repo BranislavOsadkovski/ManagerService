@@ -1,12 +1,14 @@
 package com.school.service;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -23,6 +25,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.school.objects.Student;
 import com.school.util.StudentJDBCTemplate;
+import com.school.validations.StudentException;
+import com.school.validations.StudentValidator;
 
 @Singleton
 @Path(value = "StudentService")
@@ -30,70 +34,102 @@ public class StudentService {
 	Student student;
 	private List<Student> list;
 	private @Inject HttpServletRequest request;
+	private @Inject HttpServletResponse response;
+
 	private StudentJDBCTemplate template;
 	final static Logger logger = Logger.getLogger(StudentService.class);
 
 	@POST
 	@Path(value = "newstudent")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public String createStudent(@FormDataParam(value = "name") String name, @FormDataParam(value = "age") Integer age,
+	public Response createStudent(@FormDataParam(value = "name") String name, @FormDataParam(value = "age") String age,
 			@FormDataParam(value = "email") String email, @FormDataParam(value = "image") InputStream stream) {
-		 template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-	
+		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+
 		try {
-			logger.info("Inserting new record into database");
-			template.create(name, age, email, imageBytes(stream));
+			if (StudentValidator.validateStudent(name, age, email)) {
+				
+				template.create(name, Integer.valueOf(age), email, imageBytes(stream));
+			}
+		} catch (StudentException e) {
+			logger.error(e.getMessage(), e);
+			try {
+				response.sendRedirect("/school/index.jsp");
+			} catch (IOException io) {
+				logger.error(io.getMessage(), io);
+			}
+
 		} catch (Exception ex) {
-			logger.error(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
 		}
 
-		return name;
+		return Response.ok().build();
 	}
 
 	@GET
 	@Path(value = "student/{id}")
 	@Produces(MediaType.APPLICATION_XML)
-	public Student getStudent(@PathParam(value = "id") Integer id) {
-		 
+	public Response getStudent(@PathParam(value = "id") String id) {
+		student = null;
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-	
+
 		try {
-			logger.info("Geting record from database");
-			student = template.getStudent(id);
+			if (StudentValidator.validateId(id)) { 
+				student = template.getStudent(Integer.valueOf(id));
+			}
+		} catch (StudentException se) {
+			logger.error(se.getMessage(), se);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e);
 		}
-		return student;
+		if (student != null) {
+			return Response.ok(student).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
 	}
 
 	@GET
-	@Path(value = "student/{name: [a-zA-Z][a-zA-Z_0-9]*}")
+	@Path(value = "student/{name}")
 	@Produces(MediaType.APPLICATION_XML)
-	public Student getStudentByName(@PathParam(value = "name") String name) {
-		 template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-	
-		try {
-			logger.info("Geting record from database");
-			student = template.getStudentByName(name);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
+	public Response getStudentByName(@PathParam(value = "name") String name) {
+		student = null;
+		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 
-		return student;
+		try {
+			if (StudentValidator.validatePathName(name)) {
+			
+				student = template.getStudentByName(name);
+			}
+		} catch (StudentException se) {
+			logger.error(se.getMessage(), se);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		if (student != null) {
+			return Response.ok(student).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
 	}
 
 	@PUT
 	@Path(value = "student")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response updateStudent(@FormDataParam(value = "id") Integer id, @FormDataParam(value = "name") String name,
-			@FormDataParam(value = "age") Integer age, @FormDataParam(value = "email") String email,
+	public Response updateStudent(@FormDataParam(value = "id") String id, @FormDataParam(value = "name") String name,
+			@FormDataParam(value = "age") String age, @FormDataParam(value = "email") String email,
 			@FormDataParam(value = "image") InputStream stream) {
-		 template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+
 		try {
-			logger.info("Updating record in dabatase");
-			template.updateStudent(id, name, age, email, imageBytes(stream));
+			if (StudentValidator.validateStudent(id, name, age, email)) {
+				
+				template.updateStudent(Integer.valueOf(id), name, Integer.valueOf(age), email, imageBytes(stream));
+			}
+		} catch (StudentException se) {
+			logger.error(se.getMessage(), se);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e);
 		}
 		return Response.ok().build();
 	}
@@ -101,14 +137,18 @@ public class StudentService {
 	@DELETE
 	@Path(value = "student")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response deleteStudent(@FormDataParam(value = "id") Integer id) {
-		 
+	public Response deleteStudent(@FormDataParam(value = "id") String id) {
+
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-		try{
-			logger.info("Deleting record from database");
-			template.deleteStudent(id);
-		}catch(Exception e) {
-			logger.error(e.getMessage());
+		try {
+			if (StudentValidator.validateId(id)) {
+				
+				template.deleteStudent(Integer.valueOf(id));
+			}
+		} catch (StudentException se) {
+			logger.error(se.getMessage(), se);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		return Response.ok().build();
 	}
@@ -116,16 +156,21 @@ public class StudentService {
 	@GET
 	@Path(value = "{id}/studentImage")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getStudentImage(@PathParam(value = "id") Integer id) {
-		Response r = null; 
+	public Response getStudentImage(@PathParam(value = "id") String id) {
+		Response r = null;
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-		byte[] image = new byte[1024]; 
-				try {
-					logger.info("Getting record image from database");
-					image = template.getStudentImage(id); 
-				}catch(Exception e) {
-					logger.error(e.getMessage());
-				}
+		byte[] image = new byte[1024];
+
+		try {
+			if (StudentValidator.validateId(id)) {
+			
+				image = template.getStudentImage(Integer.valueOf(id));
+			}
+		} catch (StudentException se) {
+			logger.error(se.getMessage(), se);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
 		if (image == null) {
 			r = Response.status(Response.Status.NO_CONTENT).build();
 		} else if (image != null && image.length > 0) {
@@ -138,16 +183,25 @@ public class StudentService {
 	@PUT
 	@Path(value = "setstudentimage")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response setStudentImage(@FormDataParam(value = "id") Integer id,
+	public Response setStudentImage(@FormDataParam(value = "id") String id,
 			@FormDataParam(value = "image") InputStream stream) {
-		 
+
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-		try { 
-			logger.info("Setting record image to database");
-			template.setStudentImage(id, imageBytes(stream));
-			
-		}catch(Exception e) {
-			logger.error(e.getMessage());
+		try {
+			if (StudentValidator.validateId(id)) {
+				if (imageBytes(stream).length > 0) {
+					
+					template.setStudentImage(Integer.valueOf(id), imageBytes(stream));
+				} else {
+					throw new NullPointerException("No image found;");
+				}
+			}
+		} catch (StudentException se) {
+			logger.error(se.getMessage(), se);
+		} catch (NullPointerException npe) {
+			logger.error(npe.getMessage(), npe);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		return Response.ok().build();
 	}
@@ -155,15 +209,15 @@ public class StudentService {
 	@GET
 	@Path(value = "students")
 	@Produces(MediaType.APPLICATION_XML)
-	public List<Student> getAllStudents() { 
-		 
+	public List<Student> getAllStudents() {
+
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 		try {
-			logger.info("Geting all records from database");
+			
 			list = template.getAllStudents();
-		
-		}catch(Exception e) {
-			logger.error(e.getMessage());
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		return list;
 
@@ -173,14 +227,25 @@ public class StudentService {
 	@Path(value = "students")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response batchUpdate(@FormDataParam(value = "batch") List<Student> batch) {
-	 
+
 		List<Student> students = batch;
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-		try { 
-			logger.info("Executing large BATCH update; BATCH size="+list.size()); 
-			template.executeBatchObjectUpdate(students); 
-		}catch(Exception e) {
-			logger.error(e.getMessage());
+		boolean valid = false;
+		for (Student s : students) {
+			try {
+				valid = StudentValidator.validateStudent(String.valueOf(s.getId()), s.getName(),
+						String.valueOf(s.getAge()), s.getEmail());
+			} catch (StudentException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		try {
+			if (valid) {
+				
+				template.executeBatchObjectUpdate(students);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		return Response.ok().build();
 	}
@@ -197,10 +262,10 @@ public class StudentService {
 			}
 
 		} catch (Exception ex) {
-			logger.error(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
 		}
 		byte[] arr = img.toString().getBytes();
-		return arr; 
+		return arr;
 	}
 
 }
