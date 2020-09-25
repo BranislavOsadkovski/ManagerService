@@ -227,20 +227,20 @@ public class StudentService {
 
 		List<Student> students = batch;
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-		boolean valid = false;
+	
 		for (Student s : students) {
 			try {
-				valid = StudentValidator.validateStudent(String.valueOf(s.getId()), s.getName(),
+				StudentValidator.validateStudent(String.valueOf(s.getId()), s.getName(),
 						String.valueOf(s.getAge()), s.getEmail());
 			} catch (StudentException e) {
 				logger.error(e.getMessage(), e);
 			}
 		}
 		try {
-			if (valid) {
+			
 
 				template.executeBatchObjectUpdate(students);
-			}
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
