@@ -77,6 +77,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 			logger.info("Found record from database by id");
 		} catch (Exception ex) {
 			 logger.error(ex.getMessage(), ex);	
+			 student=null;
 		}   
 		return student;
 	}
@@ -86,20 +87,23 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecordByName");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_name", name);
 		Map<String, Object> out = null;
+		Student student = new Student();
 		try {
 			out = jdbcCall.execute(in);
+			
+			student.setId((Integer) out.get("out_id"));
+			student.setName(name);
+			student.setAge((Integer) out.get("out_age"));
+			student.setEmail((String) out.get("out_email"));
+			student.setImage((byte[]) out.get("out_image"));
 			logger.info("Found record from database by name");
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
+			student=null;
 		}
 		
 		
-		Student student = new Student();
-		student.setId((Integer) out.get("out_id"));
-		student.setName(name);
-		student.setAge((Integer) out.get("out_age"));
-		student.setEmail((String) out.get("out_email"));
-		student.setImage((byte[]) out.get("out_image"));
+	
 		return student;
 
 	}
