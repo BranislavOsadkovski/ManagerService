@@ -64,7 +64,7 @@ public class StudentValidator {
 	}
 	public static boolean validateName(String name) throws StudentException {
  
-		pattern =Pattern.compile("^[A-Z]+[a-zA-Z]");
+		pattern =Pattern.compile("/^[A-Z]+[a-zA-Z]");
 		matcher = pattern.matcher(name);
 		if ( matcher.find()) {
 			valid = false;
@@ -78,7 +78,7 @@ public class StudentValidator {
 	
 	public static boolean validatePathName(String name) throws StudentException {
 		 
-		pattern =Pattern.compile("[a-zA-Z]");
+		pattern =Pattern.compile("a-zA-Z");
 		matcher = pattern.matcher(name);
 		if ( matcher.find()) {
 			valid = false;
@@ -88,5 +88,15 @@ public class StudentValidator {
 		}
 		
 		return valid;
+	}
+	public static void main(String[]args) {
+		pattern =Pattern.compile("a-zA-Z");
+		matcher = pattern.matcher("branislav");
+		if ( matcher.find()) {
+			System.out.println("!");
+			 
+		} else {
+			System.out.println("valid");
+		}
 	}
 }

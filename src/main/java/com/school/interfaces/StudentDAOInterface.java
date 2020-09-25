@@ -17,7 +17,7 @@ public interface StudentDAOInterface {
 	
 	public Student getStudent(Integer id); 	
 	
-	public Student getStudentByName(String name);
+	public Student getDBStudentByName(String name);
 	
 	public void updateStudent(Integer id, String name, Integer age,String email,byte [] image);
 	

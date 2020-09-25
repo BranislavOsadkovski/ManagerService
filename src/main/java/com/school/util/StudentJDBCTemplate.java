@@ -21,8 +21,7 @@ import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
 
 import com.school.interfaces.StudentDAOInterface;
-import com.school.objects.Student;
-import com.school.service.StudentService;
+import com.school.objects.Student; 
 
 public class StudentJDBCTemplate implements StudentDAOInterface {
 	private JdbcTemplate jdbcTemplate;
@@ -50,7 +49,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		parameters.put("email", email);
 		parameters.put("image", image);
 		jdbcInsert.execute(parameters);
-		logger.info("Saving new record into database");
+		logger.info("Saved new record into database");
 	}
 
 	@Override
@@ -69,10 +68,10 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 	}
 
 	@Override
-	public Student getStudentByName(String name) { 
+	public Student getDBStudentByName(String name) { 
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecordByName");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_name", name);
-		Map<String, Object> out = jdbcCall.execute(in);
+		Map<String, Object> out=jdbcCall.execute(in);  
 		logger.info("Get record from database by name");
 		Student student = new Student();
 		student.setId((Integer) out.get("out_id"));
@@ -139,5 +138,5 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		templateObject.batchUpdate(SQL, batch); 
 		logger.info("Executing large BATCH update; BATCH size=" + students.size());
 	}
-
+ 
 }

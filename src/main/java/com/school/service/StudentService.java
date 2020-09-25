@@ -48,7 +48,7 @@ public class StudentService {
 
 		try {
 			if (StudentValidator.validateStudent(name, age, email)) {
-				
+
 				template.create(name, Integer.valueOf(age), email, imageBytes(stream));
 			}
 		} catch (StudentException e) {
@@ -74,7 +74,7 @@ public class StudentService {
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 
 		try {
-			if (StudentValidator.validateId(id)) { 
+			if (StudentValidator.validateId(id)) {
 				student = template.getStudent(Integer.valueOf(id));
 			}
 		} catch (StudentException se) {
@@ -90,7 +90,7 @@ public class StudentService {
 	}
 
 	@GET
-	@Path(value = "student/{name}")
+	@Path(value = "student/name/{name}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getStudentByName(@PathParam(value = "name") String name) {
 		student = null;
@@ -98,11 +98,8 @@ public class StudentService {
 
 		try {
 			if (StudentValidator.validatePathName(name)) {
-			
-				student = template.getStudentByName(name);
+				student = template.getDBStudentByName(name);
 			}
-		} catch (StudentException se) {
-			logger.error(se.getMessage(), se);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -123,7 +120,7 @@ public class StudentService {
 
 		try {
 			if (StudentValidator.validateStudent(id, name, age, email)) {
-				
+
 				template.updateStudent(Integer.valueOf(id), name, Integer.valueOf(age), email, imageBytes(stream));
 			}
 		} catch (StudentException se) {
@@ -142,7 +139,7 @@ public class StudentService {
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 		try {
 			if (StudentValidator.validateId(id)) {
-				
+
 				template.deleteStudent(Integer.valueOf(id));
 			}
 		} catch (StudentException se) {
@@ -163,7 +160,7 @@ public class StudentService {
 
 		try {
 			if (StudentValidator.validateId(id)) {
-			
+
 				image = template.getStudentImage(Integer.valueOf(id));
 			}
 		} catch (StudentException se) {
@@ -190,7 +187,7 @@ public class StudentService {
 		try {
 			if (StudentValidator.validateId(id)) {
 				if (imageBytes(stream).length > 0) {
-					
+
 					template.setStudentImage(Integer.valueOf(id), imageBytes(stream));
 				} else {
 					throw new NullPointerException("No image found;");
@@ -213,7 +210,7 @@ public class StudentService {
 
 		template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 		try {
-			
+
 			list = template.getAllStudents();
 
 		} catch (Exception e) {
@@ -241,7 +238,7 @@ public class StudentService {
 		}
 		try {
 			if (valid) {
-				
+
 				template.executeBatchObjectUpdate(students);
 			}
 		} catch (Exception e) {
