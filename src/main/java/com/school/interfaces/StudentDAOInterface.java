@@ -7,6 +7,10 @@ import javax.sql.DataSource;
 import com.school.objects.Student;
  
 
+/**
+ * @author Branislav
+ *
+ */
 public interface StudentDAOInterface {
 
 	public DataSource getDataSource() ;

@@ -7,7 +7,21 @@
   <version>1.0-SNAPSHOT</version>
   <name>school Maven Webapp</name>
   <url>http://maven.apache.org</url>
+  <developers>
+		<developer>
+			<id>baneosad</id>
+			<name>Branislav Osadkovski</name>
+			<email>osadkovski.b(at)gmail.com</email>
+			<organization></organization>
+			<organizationUrl></organizationUrl>
+			<roles>
+				<role>Project Lead</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
   <dependencies>  
+ 	
 		 <dependency>
 		      <groupId>junit</groupId>
 		      <artifactId>junit</artifactId>

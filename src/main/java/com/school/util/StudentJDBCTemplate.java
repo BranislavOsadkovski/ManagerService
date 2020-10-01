@@ -1,7 +1,6 @@
 package com.school.util;
 
 import java.io.ByteArrayInputStream;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -20,10 +19,15 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
+import org.springframework.util.Assert;
 
 import com.school.interfaces.StudentDAOInterface;
-import com.school.objects.Student;
+import com.school.objects.Student; 
 
+/**
+ * @author Branislav
+ *
+ */
 public class StudentJDBCTemplate implements StudentDAOInterface {
 	private JdbcTemplate jdbcTemplate;
 	private DataSource dataSource;
@@ -45,7 +49,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 
 	@Override
 	public void create(String name, Integer age, String email, byte[] image) {
-
+		Assert.notNull(name, "name parameter can not be null");
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("name", name);
 		parameters.put("age", age);
