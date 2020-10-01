@@ -25,7 +25,8 @@ import com.school.interfaces.StudentDAOInterface;
 import com.school.objects.Student;
 
 /**
- * StudentJDBCTemplate is Data Repository class that is used to communicate with database.
+ * StudentJDBCTemplate is Data Repository class that is used to communicate with
+ * database.
  * 
  * @author Branislav
  *
