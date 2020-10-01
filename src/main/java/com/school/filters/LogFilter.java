@@ -12,21 +12,23 @@ import javax.servlet.ServletResponse;
 
 import org.apache.log4j.Logger;
 
-/**LogFilter logs client IP Address,Date and Time when Filter.doFilter() method is called 
+/**
+ * LogFilter logs client IP Address,Date and Time when Filter.doFilter() method is called 
  * @author Branislav
  *
  */
 public class LogFilter implements Filter{
 	
-	/**Called by the web container to indicate to a filter that it is being taken out of service.
-	 *
+	/**
+	 *Called by the web container to indicate to a filter that it is being taken out of service.
 	 */
 	@Override
 	public void destroy() {
 		logger.info("LogFilter destroyed");
 	}
 	
-	/**Called by the web container to indicate to a filter that it is being placed into service.
+	/**
+	 * Called by the web container to indicate to a filter that it is being placed into service.
 	 *@param filterConfig 
 	 */
 	@Override
@@ -36,7 +38,8 @@ public class LogFilter implements Filter{
 	private static final Logger logger = Logger.getLogger(LogFilter.class);
 	
 	
-	/**The doFilter method of the Filter is called by the container each time a request/response pair is passed 
+	/**
+	 * The doFilter method of the Filter is called by the container each time a request/response pair is passed 
 	 * through the chain due to a client request for a resource at the end of the chain
 	 *@param arg0
 	 *@param arg1

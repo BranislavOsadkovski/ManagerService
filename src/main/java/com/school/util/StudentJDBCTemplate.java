@@ -22,18 +22,25 @@ import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.util.Assert;
 
 import com.school.interfaces.StudentDAOInterface;
-import com.school.objects.Student; 
+import com.school.objects.Student;
 
 /**
+ * StudentJDBCTemplate is Data Repository class that is used to communicate with database.
+ * 
  * @author Branislav
  *
  */
-public class StudentJDBCTemplate implements StudentDAOInterface {
+public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	private JdbcTemplate jdbcTemplate;
 	private DataSource dataSource;
 	SimpleJdbcInsert jdbcInsert; // multi-threaded reusable object providing easy insert capabilities for a table
 	final static Logger logger = Logger.getLogger(StudentJDBCTemplate.class);
 
+	/**
+	 * Set DataSource data
+	 * 
+	 * @param data
+	 */
 	@Override
 	@Autowired(required = true)
 	public void setDataSource(DataSource data) {
@@ -42,19 +49,32 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		this.jdbcInsert = new SimpleJdbcInsert(data).withTableName("student");
 	}
 
+	/**
+	 * Returns DataSource
+	 * 
+	 * @return dataSource
+	 */
 	@Override
 	public DataSource getDataSource() {
 		return this.dataSource;
 	}
 
+	/**
+	 * Saves new Student record into database
+	 * 
+	 * @param name
+	 * @param age
+	 * @param email
+	 * @param image
+	 */
 	@Override
-	public void create(String name, Integer age, String email, byte[] image) {
-		Assert.notNull(name, "name parameter can not be null");
+	public void create(Student student) {
+		Assert.notNull(student, "Student object can not be null");
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("name", name);
-		parameters.put("age", age);
-		parameters.put("email", email);
-		parameters.put("image", image);
+		parameters.put("name", student.getName());
+		parameters.put("age", student.getAge());
+		parameters.put("email", student.getEmail());
+		parameters.put("image", student.getImage());
 		try {
 			jdbcInsert.execute(parameters);
 			logger.info("Saved new record into database");
@@ -65,36 +85,50 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 
 	}
 
+	/**
+	 * Fetch Student record from database
+	 * 
+	 * @param id
+	 * @return Student
+	 */
 	@Override
 	public Student getStudent(Integer id) {
+		Assert.notNull(id, "Id can not be null");
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecord");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_id", id);
 		Map<String, Object> out = null;
 		Student student = new Student();
 		try {
-			out = jdbcCall.execute(in);	
+			out = jdbcCall.execute(in);
 			student.setId(id);
 			student.setName((String) out.get("out_name"));
 			student.setAge((Integer) out.get("out_age"));
 			student.setEmail((String) out.get("out_email"));
-			student.setImage((byte[]) out.get("out_image")); 
+			student.setImage((byte[]) out.get("out_image"));
 			logger.info("Found record from database by id");
 		} catch (Exception ex) {
-			 logger.error(ex.getMessage(), ex);	
-			 student=null;
-		}   
+			logger.error(ex.getMessage(), ex);
+			student = null;
+		}
 		return student;
 	}
- 
+
+	/**
+	 * Fetch Student record by name from database
+	 * 
+	 * @param name
+	 * @return Student
+	 */
 	@Override
 	public Student getDBStudentByName(String name) {
+		Assert.notNull(name, "name can not be null");
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecordByName");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_name", name);
 		Map<String, Object> out = null;
 		Student student = new Student();
 		try {
 			out = jdbcCall.execute(in);
-			
+
 			student.setId((Integer) out.get("out_id"));
 			student.setName(name);
 			student.setAge((Integer) out.get("out_age"));
@@ -103,30 +137,44 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 			logger.info("Found record from database by name");
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
-			student=null;
+			student = null;
 		}
-		
-		
-	
+
 		return student;
 
 	}
 
+	/**
+	 * Updates new values for Student record by passed @id value into database
+	 * 
+	 * @param id
+	 * @param name
+	 * @param age
+	 * @param email
+	 * @param image
+	 */
 	@Override
-	public void updateStudent(Integer id, String name, Integer age, String email, byte[] image) {
+	public void updateStudent(Student student) {
+		Assert.notNull(student, "Student object can not be null");
 		String SQL = "update student set name=?,age=?,email=?,image=? where id = ?";
 		try {
-		jdbcTemplate.update(SQL, name, age, email, image, id);
-		logger.info("Updated record in dabatase");
+			jdbcTemplate.update(SQL, student.getName(), student.getAge(), student.getEmail(), student.getImage(),
+					student.getId());
+			logger.info("Updated record in dabatase");
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
-		
-	
+
 	}
 
+	/**
+	 * Deletes Student record from database by passed @id
+	 * 
+	 * @param id
+	 */
 	@Override
 	public void deleteStudent(Integer id) {
+		Assert.notNull(id, "id can not be null");
 		String SQL = "delete from student where id = ?";
 		try {
 			jdbcTemplate.update(SQL, id);
@@ -134,12 +182,18 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
-		
-		
+
 	}
 
+	/**
+	 * Returns image bytes from database from Student record by passed @id
+	 * 
+	 * @param id
+	 * @return byte[]
+	 */
 	@Override
 	public byte[] getStudentImage(Integer id) {
+		Assert.notNull(id, "id can not be null");
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withFunctionName("get_student_image");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_id", id);
 		byte[] image = null;
@@ -149,14 +203,19 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
-		
-		
+
 		return image;
 	}
 
+	/**
+	 * Saves image bytes into database
+	 * 
+	 * @param id
+	 * @param image
+	 */
 	@Override
 	public void setStudentImage(Integer id, byte[] image) {
-
+		Assert.notNull(id, "id can not be null");
 		MapSqlParameterSource in = new MapSqlParameterSource();
 		in.addValue("id", id);
 		in.addValue("image", new SqlLobValue(new ByteArrayInputStream(image), image.length, new DefaultLobHandler()),
@@ -165,33 +224,43 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		String SQL = "update student set image=:image where id= :id";
 		NamedParameterJdbcTemplate jdbcTemplateObject = new NamedParameterJdbcTemplate(dataSource);
 		try {
-				jdbcTemplateObject.update(SQL, in);
-				logger.info("Saved image to database");
+			jdbcTemplateObject.update(SQL, in);
+			logger.info("Saved image to database");
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
-	
-	
+
 	}
 
+	/**
+	 * Returns a list of all Student records from database
+	 * 
+	 * @return List<T>
+	 */
 	@Override
 	public List<Student> getAllStudents() {
 
 		String SQL = "select * from student;";
-		List<Student> list =null;
+		List<Student> list = null;
 		try {
 			list = jdbcTemplate.query(SQL, new StudentMapper());
 			logger.info("Selected all records from database");
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
-	
+
 		return list;
 
 	}
 
+	/**
+	 * Executes a large update into database
+	 * 
+	 * @param students
+	 */
 	@Override
 	public void executeBatchObjectUpdate(final List<Student> students) {
+		Assert.notNull(students, "students list can not be null");
 		String SQL = "update student set name=:name,age=:age,email=:email,image=:image where id=:id";
 		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(students.toArray());
 		NamedParameterJdbcTemplate templateObject = new NamedParameterJdbcTemplate(dataSource);
@@ -201,7 +270,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface {
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
-		
+
 	}
 
 }

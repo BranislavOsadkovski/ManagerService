@@ -28,15 +28,13 @@ public class AuthenticationFilter implements Filter{
 		logger.info("AuthenticationFilter initialized");
 	}
 	
-	/**The doFilter method of the Filter is called by the container each time a request/response pair is passed 
+	/**
+	 * The doFilter method of the Filter is called by the container each time a request/response pair is passed 
 	 * through the chain due to a client request for a resource at the end of the chain
-	 *
 	 *@param request
 	 *@param response
 	 *@param chain
 	 */
-	
-	
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -47,8 +45,8 @@ public class AuthenticationFilter implements Filter{
 		chain.doFilter(request, response);
 		
 	}
-	/**  Called by the web container to indicate to a filter that it is being taken out of service.
-	 *
+	/** 
+	 * Called by the web container to indicate to a filter that it is being taken out of service.
 	 */
 	@Override
 	public void destroy() {
