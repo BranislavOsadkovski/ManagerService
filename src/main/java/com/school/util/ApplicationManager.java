@@ -6,7 +6,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * ApplicationManager manages database connection and injects
- * ClassPathXmlApplicationContext configuration.
+ * org.springframework.context.ConfigurableApplicationContext configuration.
  * 
  * @author Branislav
  *
