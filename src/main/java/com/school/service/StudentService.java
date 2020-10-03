@@ -346,7 +346,7 @@ public class StudentService {
 
 	/**
 	 * Receives InputStream byte stream and writes as characters into StringBuilder
-	 * and then converts it into a byte array
+	 * and returns as byte array
 	 * 
 	 * @param inputStream
 	 * @return array
