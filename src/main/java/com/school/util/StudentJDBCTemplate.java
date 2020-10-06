@@ -1,6 +1,8 @@
 package com.school.util;
 
 import java.io.ByteArrayInputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,8 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -19,8 +23,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
+import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.util.Assert;
 
+import com.mysql.cj.jdbc.Blob;
 import com.school.interfaces.StudentDAOInterface;
 import com.school.objects.Student;
 
@@ -194,17 +200,20 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 */
 	@Override
 	public byte[] getStudentImage(Integer id) {
-		Assert.notNull(id, "id can not be null");
-		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withFunctionName("get_student_image");
-		SqlParameterSource in = new MapSqlParameterSource().addValue("in_id", id);
+		Assert.notNull(id, "id can not be null"); 
 		byte[] image = null;
-		try {
-			image = (byte[]) jdbcCall.executeFunction(Object.class, in);
-			logger.info("Uploaded image from database");
-		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
-		}
+		LobHandler lobHandler = new DefaultLobHandler();
+		String SQL = "SELECT image FROM student WHERE id="+id;
+		List<byte[]> list = jdbcTemplate.query(SQL, new RowMapper<byte[]>() {
+			@Override
+			public byte[] mapRow(ResultSet rs, int rowNum) throws SQLException {
 
+				byte[] requestData = lobHandler.getBlobAsBytes(rs, "image");
+				
+				return requestData;
+			}
+		});
+		image = list.get(0);
 		return image;
 	}
 

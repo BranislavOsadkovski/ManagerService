@@ -1,8 +1,12 @@
 package com.school.service;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,7 +28,10 @@ import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.util.Assert;
 
+import com.school.objects.Image;
 import com.school.objects.Student;
+import com.school.proxyimage.ProxyImage;
+import com.school.proxyimage.RImage;
 import com.school.util.StudentJDBCTemplate;
 import com.school.validations.StudentException;
 import com.school.validations.StudentValidator;
@@ -44,7 +51,6 @@ public class StudentService {
 	private List<Student> list;
 	private @Inject HttpServletRequest request;
 	private @Inject HttpServletResponse response;
-
 	private StudentJDBCTemplate template;
 	final static Logger logger = Logger.getLogger(StudentService.class);
 
@@ -215,31 +221,36 @@ public class StudentService {
 	 * @return Response
 	 */
 	@GET
-	@Path(value = "{id}/studentImage")
+	@Path(value = "{id}/studentimage")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getStudentImage(@PathParam(value = "id") String id) {
 		Response r = null;
 
-		byte[] image = new byte[1024];
+		byte[] imageBytes = new byte[1024];
 
 		try {
 			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 			if (StudentValidator.validateId(id)) {
 
-				image = template.getStudentImage(Integer.valueOf(id));
+				Image img = ProxyImage.getProxyImage(Integer.valueOf(id), template);
+
+				imageBytes = img.getImageBytes();
+
+				BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
+				if (imageBytes == null) {
+					r = Response.status(Response.Status.NO_CONTENT).build();
+				} else if (imageBytes != null && imageBytes.length > 0) {
+					r = Response.ok(imageBytes, MediaType.APPLICATION_OCTET_STREAM_TYPE).build();
+					bos.write(imageBytes);
+				}
 			}
 		} catch (StudentException se) {
 			logger.error(se.getMessage(), se);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-		if (image == null) {
-			r = Response.status(Response.Status.NO_CONTENT).build();
-		} else if (image != null && image.length > 0) {
-			r = Response.ok(image, MediaType.APPLICATION_OCTET_STREAM_TYPE).build();
-		}
-		return r;
 
+		return r;
 	}
 
 	/**
@@ -252,17 +263,16 @@ public class StudentService {
 	 * @return Response
 	 */
 	@PUT
-	@Path(value = "setstudentimage")
+	@Path(value = "studentimage")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response setStudentImage(@FormDataParam(value = "id") String id,
 			@FormDataParam(value = "image") InputStream stream) {
 		try {
 			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-
+			byte[] imageBytes = imageBytes(stream);
 			if (StudentValidator.validateId(id)) {
-				if (imageBytes(stream).length > 0) {
-
-					template.setStudentImage(Integer.valueOf(id), imageBytes(stream));
+				if (imageBytes.length > 0) { 
+					template.setStudentImage(Integer.valueOf(id), imageBytes);
 				} else {
 					throw new NullPointerException("No image found;");
 				}
@@ -366,9 +376,9 @@ public class StudentService {
 			logger.error(ex.getMessage(), ex);
 		}
 		byte[] array = img.toString().getBytes();
-		if (array.length < 1) {
-			array = null;
-		}
+//		if (array.length < 1) {
+//			array = null;
+//		}
 		return array;
 	}
 

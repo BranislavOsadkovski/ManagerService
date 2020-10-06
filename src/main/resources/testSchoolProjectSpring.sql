@@ -33,15 +33,4 @@ BEGIN
    FROM Student where name= in_name;
 END $$
 DELIMITER ;  
-
-DROP FUNCTION IF EXISTS `get_student_image`;
-DELIMITER $$
-CREATE FUNCTION get_student_image(in_id INTEGER)
-RETURNS MEDIUMBLOB
-BEGIN
-DECLARE out_image MEDIUMBLOB;
-SELECT image INTO out_image FROM student WHERE id=in_id;
-RETURN out_image;
-END $$
-DELIMITER ;
-
+ 
