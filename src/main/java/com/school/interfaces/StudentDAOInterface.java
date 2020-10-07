@@ -34,7 +34,7 @@ public interface StudentDAOInterface<T> {
 	 * @param email
 	 * @param image
 	 */
-	public void create(Student student);
+	public void create(Ocupation student);
 
 	/**
 	 * Fetch Student record from database
@@ -61,7 +61,7 @@ public interface StudentDAOInterface<T> {
 	 * @param email
 	 * @param image
 	 */
-	public void updateStudent(Student student);
+	public void updateStudent(Ocupation student);
 
 	/**
 	 * Deletes Student record from database by passed @id

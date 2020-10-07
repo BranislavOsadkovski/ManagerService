@@ -1,12 +1,9 @@
 package com.school.service;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedOutputStream; 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
+import java.io.InputStream; 
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,10 +25,13 @@ import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.util.Assert;
 
+import com.school.enumerations.OcupationType;
+import com.school.factories.AbstractFactory;
+import com.school.factories.OcupationFactory;
+import com.school.interfaces.Ocupation;
 import com.school.objects.Image;
 import com.school.objects.Student;
-import com.school.proxyimage.ProxyImage;
-import com.school.proxyimage.RImage;
+import com.school.proxyimage.ProxyImage; 
 import com.school.util.StudentJDBCTemplate;
 import com.school.validations.StudentException;
 import com.school.validations.StudentValidator;
@@ -47,7 +47,7 @@ import com.school.validations.StudentValidator;
 @Singleton
 @Path(value = "StudentService")
 public class StudentService {
-	Student student;
+	private Student student;
 	private List<Student> list;
 	private @Inject HttpServletRequest request;
 	private @Inject HttpServletResponse response;
@@ -73,8 +73,14 @@ public class StudentService {
 		try {
 			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 
+			AbstractFactory factory = new OcupationFactory();
+			Ocupation student = (Student) factory.getOcupation(OcupationType.STUDENT);
+
 			if (StudentValidator.validateStudent(name, age, email)) {
-				student = new Student(name, Integer.valueOf(age), email, imageBytes(stream));
+				student.setName(name);
+				student.setAge(Integer.valueOf(age));
+				student.setEmail(email);
+				student.setImage(imageBytes(stream));
 				template.create(student);
 			}
 		} catch (StudentException e) {
@@ -172,9 +178,15 @@ public class StudentService {
 			@FormDataParam(value = "image") InputStream stream) {
 		try {
 			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+			AbstractFactory factory = new OcupationFactory();
+			Ocupation student = factory.getOcupation(OcupationType.STUDENT);
 
 			if (StudentValidator.validateStudent(id, name, age, email)) {
-				student = new Student(Integer.valueOf(id), name, Integer.valueOf(age), email, imageBytes(stream));
+				student.setId(Integer.valueOf(id));
+				student.setAge(Integer.valueOf(age));
+				student.setEmail(email);
+				student.setName(name);
+
 				template.updateStudent(student);
 			}
 		} catch (StudentException se) {
@@ -271,7 +283,7 @@ public class StudentService {
 			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 			byte[] imageBytes = imageBytes(stream);
 			if (StudentValidator.validateId(id)) {
-				if (imageBytes.length > 0) { 
+				if (imageBytes.length > 0) {
 					template.setStudentImage(Integer.valueOf(id), imageBytes);
 				} else {
 					throw new NullPointerException("No image found;");
@@ -376,9 +388,9 @@ public class StudentService {
 			logger.error(ex.getMessage(), ex);
 		}
 		byte[] array = img.toString().getBytes();
-//		if (array.length < 1) {
-//			array = null;
-//		}
+		if (array.length < 1) {
+			array = null;
+		}
 		return array;
 	}
 

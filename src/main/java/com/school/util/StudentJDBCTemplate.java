@@ -12,8 +12,7 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.JdbcTemplate; 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,8 +24,8 @@ import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.util.Assert;
-
-import com.mysql.cj.jdbc.Blob;
+ 
+import com.school.interfaces.Ocupation;
 import com.school.interfaces.StudentDAOInterface;
 import com.school.objects.Student;
 
@@ -75,7 +74,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 * @param image
 	 */
 	@Override
-	public void create(Student student) {
+	public void create(Ocupation student) {
 		Assert.notNull(student, "Student object can not be null");
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("name", student.getName());
@@ -161,7 +160,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 * @param image
 	 */
 	@Override
-	public void updateStudent(Student student) {
+	public void updateStudent(Ocupation student) {
 		Assert.notNull(student, "Student object can not be null");
 		String SQL = "update student set name=?,age=?,email=?,image=? where id = ?";
 		try {
