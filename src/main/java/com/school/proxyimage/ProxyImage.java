@@ -10,6 +10,10 @@ import com.school.util.StudentJDBCTemplate;
  * @author Branislav
  *
  */
+/**
+ * @author Branislav
+ *
+ */
 public class ProxyImage {
 	private static int imgId = 0;
 	private static Image image;
@@ -18,18 +22,24 @@ public class ProxyImage {
 	public ProxyImage() {
 
 	}
- 
 
-	public static Image getProxyImage(int id,StudentJDBCTemplate template) {
-		 
-		 
+	/**
+	 * returns cached image object if same @param id passed to the method or fetches
+	 * a new Image from database if different @param id value is given
+	 * 
+	 * @param id
+	 * @param template must not be null
+	 * @return image
+	 */
+	public static Image getProxyImage(int id, StudentJDBCTemplate template) {
+
 		if (imgId != id) {
-			imgId= id;
-			 rimage = new RImage(imgId, template);
-			 image = rimage.getRealImage();
+			imgId = id;
+			rimage = new RImage(imgId, template);
+			image = rimage.getRealImage();
 			return image;
-		} else { 
-			return  image;
+		} else {
+			return image;
 		}
 	}
 
