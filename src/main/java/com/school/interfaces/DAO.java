@@ -26,51 +26,40 @@ public interface DAO<T> {
 	public void setDataSource(DataSource data);
 
 	/**
-	 * Saves new Object record into database
-	 * 
-	 * @param name
-	 * @param age
-	 * @param email
-	 * @param image
+	 * Saves new @T record into database 
 	 */
 	public void create(Ocupation ocupation);
 
 	/**
-	 * Fetch Object record from database
+	 * Fetch @T record from database
 	 * 
 	 * @param id
-	 * @return Student
+	 * @return T
 	 */
 	public T getById(Integer id);
 
 	/**
-	 * Fetch Object record by name from database
+	 * Fetch @T record by name from database
 	 * 
 	 * @param name
-	 * @return Student
+	 * @return @T
 	 */
 	public T getByName(String name);
 
 	/**
-	 * Updates new values for Student record by passed @id value into database
-	 * 
-	 * @param id
-	 * @param name
-	 * @param age
-	 * @param email
-	 * @param image
+	 * Updates record
 	 */
 	public void update(Ocupation pcupation);
 
 	/**
-	 * Deletes Student record from database by passed @id
+	 * Deletes @T record from database by passed @id
 	 * 
 	 * @param id
 	 */
 	public void delete(Integer id);
 
 	/**
-	 * Returns image bytes from database from Student record by passed @id
+	 * Returns image bytes from database from @T record by passed @id
 	 * 
 	 * @param id
 	 * @return byte[]
@@ -86,7 +75,7 @@ public interface DAO<T> {
 	public void setImage(Integer id, byte[] image);
 
 	/**
-	 * Returns a list of all Student records from database
+	 * Returns a list of all @T records from database
 	 * 
 	 * @return List<T>
 	 */
@@ -95,8 +84,8 @@ public interface DAO<T> {
 	/**
 	 * Executes a large update into database
 	 * 
-	 * @param students
+	 * @param update
 	 */
-	public void executeBatchUpdate(final List<T> students);
+	public void executeBatchUpdate(final List<T> update);
 
 }
