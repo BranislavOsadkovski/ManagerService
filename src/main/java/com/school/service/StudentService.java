@@ -1,9 +1,9 @@
 package com.school.service;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream; 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStream; 
+import java.io.InputStream;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,7 +31,7 @@ import com.school.factories.OcupationFactory;
 import com.school.interfaces.Ocupation;
 import com.school.objects.Image;
 import com.school.objects.Student;
-import com.school.proxyimage.ProxyImage; 
+import com.school.proxyimage.ProxyImage;
 import com.school.util.StudentJDBCTemplate;
 import com.school.validations.StudentException;
 import com.school.validations.StudentValidator;
@@ -51,7 +51,8 @@ public class StudentService {
 	private List<Student> list;
 	private @Inject HttpServletRequest request;
 	private @Inject HttpServletResponse response;
-	private StudentJDBCTemplate template;
+	private StudentJDBCTemplate studentTemplate;
+	private final AbstractFactory factory = new OcupationFactory();
 	final static Logger logger = Logger.getLogger(StudentService.class);
 
 	/**
@@ -71,9 +72,8 @@ public class StudentService {
 	public Response createStudent(@FormDataParam(value = "name") String name, @FormDataParam(value = "age") String age,
 			@FormDataParam(value = "email") String email, @FormDataParam(value = "image") InputStream stream) {
 		try {
-			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 
-			AbstractFactory factory = new OcupationFactory();
 			Ocupation student = (Student) factory.getOcupation(OcupationType.STUDENT);
 
 			if (StudentValidator.validateStudent(name, age, email)) {
@@ -81,7 +81,7 @@ public class StudentService {
 				student.setAge(Integer.valueOf(age));
 				student.setEmail(email);
 				student.setImage(imageBytes(stream));
-				template.create(student);
+				studentTemplate.create(student);
 			}
 		} catch (StudentException e) {
 			logger.error(e.getMessage(), e);
@@ -112,10 +112,10 @@ public class StudentService {
 	public Response getStudent(@PathParam(value = "id") String id) {
 		student = null;
 		try {
-			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 
 			if (StudentValidator.validateId(id)) {
-				student = template.getStudent(Integer.valueOf(id));
+				student = studentTemplate.getById(Integer.valueOf(id));
 			}
 		} catch (StudentException se) {
 			logger.error(se.getMessage(), se);
@@ -143,10 +143,10 @@ public class StudentService {
 	public Response getStudentByName(@PathParam(value = "name") String name) {
 		student = null;
 		try {
-			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 
 			if (StudentValidator.validatePathName(name)) {
-				student = template.getDBStudentByName(name);
+				student = studentTemplate.getByName(name);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -177,8 +177,8 @@ public class StudentService {
 			@FormDataParam(value = "age") String age, @FormDataParam(value = "email") String email,
 			@FormDataParam(value = "image") InputStream stream) {
 		try {
-			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-			AbstractFactory factory = new OcupationFactory();
+			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+
 			Ocupation student = factory.getOcupation(OcupationType.STUDENT);
 
 			if (StudentValidator.validateStudent(id, name, age, email)) {
@@ -187,7 +187,7 @@ public class StudentService {
 				student.setEmail(email);
 				student.setName(name);
 
-				template.updateStudent(student);
+				studentTemplate.update(student);
 			}
 		} catch (StudentException se) {
 			logger.error(se.getMessage(), se);
@@ -210,11 +210,11 @@ public class StudentService {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response deleteStudent(@FormDataParam(value = "id") String id) {
 		try {
-			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 
 			if (StudentValidator.validateId(id)) {
 
-				template.deleteStudent(Integer.valueOf(id));
+				studentTemplate.delete(Integer.valueOf(id));
 			}
 		} catch (StudentException se) {
 			logger.error(se.getMessage(), se);
@@ -241,10 +241,10 @@ public class StudentService {
 		byte[] imageBytes = new byte[1024];
 
 		try {
-			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 			if (StudentValidator.validateId(id)) {
 
-				Image img = ProxyImage.getProxyImage(Integer.valueOf(id), template);
+				Image img = ProxyImage.getProxyImage(Integer.valueOf(id), studentTemplate);
 
 				imageBytes = img.getImageBytes();
 
@@ -280,11 +280,11 @@ public class StudentService {
 	public Response setStudentImage(@FormDataParam(value = "id") String id,
 			@FormDataParam(value = "image") InputStream stream) {
 		try {
-			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 			byte[] imageBytes = imageBytes(stream);
 			if (StudentValidator.validateId(id)) {
 				if (imageBytes.length > 0) {
-					template.setStudentImage(Integer.valueOf(id), imageBytes);
+					studentTemplate.setImage(Integer.valueOf(id), imageBytes);
 				} else {
 					throw new NullPointerException("No image found;");
 				}
@@ -312,9 +312,9 @@ public class StudentService {
 	@Produces(MediaType.APPLICATION_XML)
 	public List<Student> getAllStudents() {
 		try {
-			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 
-			list = template.getAllStudents();
+			list = studentTemplate.getAllRecords();
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -343,7 +343,7 @@ public class StudentService {
 
 			}
 
-			template = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 			List<Student> students = batch;
 			Assert.notNull(students, "Batch update can not be null");
 			for (Student s : students) {
@@ -355,7 +355,7 @@ public class StudentService {
 				}
 			}
 
-			template.executeBatchObjectUpdate(students);
+			studentTemplate.executeBatchUpdate(students);
 
 		} catch (IllegalArgumentException e) {
 

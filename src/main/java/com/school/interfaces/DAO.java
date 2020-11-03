@@ -3,14 +3,13 @@ package com.school.interfaces;
 import java.util.List;
 
 import javax.sql.DataSource;
-
-import com.school.objects.Student;
+ 
 
 /**
  * @author Branislav
  *
  */
-public interface StudentDAOInterface<T> {
+public interface DAO<T> {
 
 	/**
 	 * Returns DataSource
@@ -27,30 +26,30 @@ public interface StudentDAOInterface<T> {
 	public void setDataSource(DataSource data);
 
 	/**
-	 * Saves new Student record into database
+	 * Saves new Object record into database
 	 * 
 	 * @param name
 	 * @param age
 	 * @param email
 	 * @param image
 	 */
-	public void create(Ocupation student);
+	public void create(Ocupation ocupation);
 
 	/**
-	 * Fetch Student record from database
+	 * Fetch Object record from database
 	 * 
 	 * @param id
 	 * @return Student
 	 */
-	public T getStudent(Integer id);
+	public T getById(Integer id);
 
 	/**
-	 * Fetch Student record by name from database
+	 * Fetch Object record by name from database
 	 * 
 	 * @param name
 	 * @return Student
 	 */
-	public T getDBStudentByName(String name);
+	public T getByName(String name);
 
 	/**
 	 * Updates new values for Student record by passed @id value into database
@@ -61,14 +60,14 @@ public interface StudentDAOInterface<T> {
 	 * @param email
 	 * @param image
 	 */
-	public void updateStudent(Ocupation student);
+	public void update(Ocupation pcupation);
 
 	/**
 	 * Deletes Student record from database by passed @id
 	 * 
 	 * @param id
 	 */
-	public void deleteStudent(Integer id);
+	public void delete(Integer id);
 
 	/**
 	 * Returns image bytes from database from Student record by passed @id
@@ -76,7 +75,7 @@ public interface StudentDAOInterface<T> {
 	 * @param id
 	 * @return byte[]
 	 */
-	public byte[] getStudentImage(Integer id);
+	public byte[] getImage(Integer id);
 
 	/**
 	 * Saves image bytes into database
@@ -84,20 +83,20 @@ public interface StudentDAOInterface<T> {
 	 * @param id
 	 * @param image
 	 */
-	public void setStudentImage(Integer id, byte[] image);
+	public void setImage(Integer id, byte[] image);
 
 	/**
 	 * Returns a list of all Student records from database
 	 * 
 	 * @return List<T>
 	 */
-	public List<T> getAllStudents();
+	public List<T> getAllRecords();
 
 	/**
 	 * Executes a large update into database
 	 * 
 	 * @param students
 	 */
-	public void executeBatchObjectUpdate(final List<T> students);
+	public void executeBatchUpdate(final List<T> students);
 
 }

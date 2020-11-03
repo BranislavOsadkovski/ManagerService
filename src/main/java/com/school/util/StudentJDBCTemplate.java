@@ -26,7 +26,7 @@ import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.util.Assert;
  
 import com.school.interfaces.Ocupation;
-import com.school.interfaces.StudentDAOInterface;
+import com.school.interfaces.DAO;
 import com.school.objects.Student;
 
 /**
@@ -36,7 +36,7 @@ import com.school.objects.Student;
  * @author Branislav
  *
  */
-public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
+public class StudentJDBCTemplate implements DAO<Student> {
 	private JdbcTemplate jdbcTemplate;
 	private DataSource dataSource;
 	SimpleJdbcInsert jdbcInsert; // multi-threaded reusable object providing easy insert capabilities for a table
@@ -98,7 +98,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 * @return Student
 	 */
 	@Override
-	public Student getStudent(Integer id) {
+	public Student getById(Integer id) {
 		Assert.notNull(id, "Id can not be null");
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecord");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_id", id);
@@ -126,7 +126,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 * @return Student
 	 */
 	@Override
-	public Student getDBStudentByName(String name) {
+	public Student getByName(String name) {
 		Assert.notNull(name, "name can not be null");
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource).withProcedureName("getRecordByName");
 		SqlParameterSource in = new MapSqlParameterSource().addValue("in_name", name);
@@ -160,7 +160,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 * @param image
 	 */
 	@Override
-	public void updateStudent(Ocupation student) {
+	public void update(Ocupation student) {
 		Assert.notNull(student, "Student object can not be null");
 		String SQL = "update student set name=?,age=?,email=?,image=? where id = ?";
 		try {
@@ -179,7 +179,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 * @param id
 	 */
 	@Override
-	public void deleteStudent(Integer id) {
+	public void delete(Integer id) {
 		Assert.notNull(id, "id can not be null");
 		String SQL = "delete from student where id = ?";
 		try {
@@ -198,7 +198,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 * @return byte[]
 	 */
 	@Override
-	public byte[] getStudentImage(Integer id) {
+	public byte[] getImage(Integer id) {
 		Assert.notNull(id, "id can not be null"); 
 		byte[] image = null;
 		LobHandler lobHandler = new DefaultLobHandler();
@@ -223,7 +223,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 * @param image
 	 */
 	@Override
-	public void setStudentImage(Integer id, byte[] image) {
+	public void setImage(Integer id, byte[] image) {
 		Assert.notNull(id, "id can not be null");
 		MapSqlParameterSource in = new MapSqlParameterSource();
 		in.addValue("id", id);
@@ -247,7 +247,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 * @return List<T>
 	 */
 	@Override
-	public List<Student> getAllStudents() {
+	public List<Student> getAllRecords() {
 
 		String SQL = "select * from student;";
 		List<Student> list = null;
@@ -268,7 +268,7 @@ public class StudentJDBCTemplate implements StudentDAOInterface<Student> {
 	 * @param students
 	 */
 	@Override
-	public void executeBatchObjectUpdate(final List<Student> students) {
+	public void executeBatchUpdate(final List<Student> students) {
 		Assert.notNull(students, "students list can not be null");
 		String SQL = "update student set name=:name,age=:age,email=:email,image=:image where id=:id";
 		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(students.toArray());
