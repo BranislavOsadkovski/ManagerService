@@ -7,8 +7,8 @@ age,
 email,
 image,
 
-##HTTP methods
-*POST - StudentService/newstudent -creates new student
+## HTTP methods
+* POST - StudentService/newstudent -creates new student
 GET - StudentService/student/{id} -returns student with the same id
 GET - StudentService/student/{name} -returns student with the same name
 PUT - StudentService/student - updates student record with new values
