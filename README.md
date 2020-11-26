@@ -1,13 +1,13 @@
 # JerseyAPI-SpringDataJDBC
 jersey RESTful API with Spring Core and Spring JDBC data repository
 
-Simulating school managing REST API system for storing data about students
+REST API system for storing data about students
 name,
 age,
 email,
 image,
 
-## HTTP methods
+## exposed HTTP methods
 * POST - StudentService/newstudent -creates new student
 * GET - StudentService/student/{id} -returns student with the same id
 * GET - StudentService/student/{name} -returns student with the same name
