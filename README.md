@@ -1,5 +1,5 @@
-# JerseyAPI-SpringDataJDBC
-jersey RESTful API with Spring Core and Spring JDBC data repository
+# StudentManager
+jax.rs jersey RESTful API with Spring Core and Spring JDBC data repository
 implementing Spring Data JDBC template for persisting data
 
 REST API system for storing data about students
