@@ -8,7 +8,7 @@ age,
 email,
 image,
 
-## exposed HTTP methods
+## Exposed service HTTP methods
 * POST - StudentService/newstudent -creates new student
 * GET - StudentService/student/{id} -returns student with the same id
 * GET - StudentService/student/{name} -returns student with the same name
