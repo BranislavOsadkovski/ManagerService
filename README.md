@@ -4,7 +4,7 @@ implementing Spring Data JDBC template for persisting data
 
 REST API system for storing data about students
 name,
-age,
+age, 
 email,
 image,
 
