@@ -3,7 +3,7 @@
  */
 package com.school.interfaces;
 
-/**
+/** 
  * Interface Ocupation
  * 
  * @author Branislav

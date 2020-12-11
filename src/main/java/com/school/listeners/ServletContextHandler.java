@@ -18,7 +18,6 @@ import com.school.util.StudentJDBCTemplate;
 public class ServletContextHandler implements ServletContextListener {
 
 	private StudentJDBCTemplate studentJDBCTemplate;
-	private ServletContext context;
 	private final static Logger logger = Logger.getLogger(ServletContextHandler.class);
 
 	/**
@@ -31,15 +30,13 @@ public class ServletContextHandler implements ServletContextListener {
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		context = sce.getServletContext();
+
 		logger.info("Context initialized");
 
 		try {
 			logger.warn("Initializing Database Connection");
 			this.studentJDBCTemplate = (StudentJDBCTemplate) ApplicationManager.getSpringAppContext()
 					.getBean("studentJDBCTemplate");
-
-			context.setAttribute("studentJDBCtemplate", studentJDBCTemplate);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

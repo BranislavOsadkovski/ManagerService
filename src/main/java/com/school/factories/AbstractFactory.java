@@ -3,7 +3,7 @@
  */
 package com.school.factories;
 
-import com.school.enumerations.OcupationType;
+import com.school.validations.OcupationType;
 import com.school.interfaces.Ocupation;
 
 /**

@@ -1,31 +1,15 @@
+/**
+ * Copyright the original author or authors.
+ */
 package com.school.service;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.apache.log4j.Logger;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.util.Assert;
 
-import com.school.enumerations.OcupationType;
 import com.school.factories.AbstractFactory;
 import com.school.factories.OcupationFactory;
 import com.school.interfaces.Ocupation;
@@ -33,154 +17,110 @@ import com.school.objects.Image;
 import com.school.objects.Student;
 import com.school.proxyimage.ProxyImage;
 import com.school.util.StudentJDBCTemplate;
+import com.school.validations.OcupationType;
 import com.school.validations.StudentException;
 import com.school.validations.StudentValidator;
 
 /**
- * StudentService class is a Web Service class and its methods receive
- * HttpRequests on paths mapped by javax.ws.rs.Path annotations and send
- * HttpResponse to client after they are processed
- * 
  * @author Branislav
  *
  */
-@Singleton
-@Path(value = "StudentService")
 public class StudentService {
-	private Student student;
-	private List<Student> list;
-	private @Inject HttpServletRequest request;
-	private @Inject HttpServletResponse response;
-	private StudentJDBCTemplate studentTemplate;
-	private final AbstractFactory factory = new OcupationFactory();
+
 	final static Logger logger = Logger.getLogger(StudentService.class);
+	private final StudentJDBCTemplate studentTemplate;
+	private Student student;
+	private final AbstractFactory factory = new OcupationFactory();
 
 	/**
-	 * Responds to HttpPOST requests in MULTIPART_FORM_DATA MediaType form.
+	 * @param template must not be null
+	 */
+	public StudentService(StudentJDBCTemplate template) {
+		super();
+		this.studentTemplate = template;
+	}
+
+	/**
 	 * Validates parameters from the Request if invalid throws StudentException.
 	 * Creates Student object and saves it into database.
+	 * Returns true if operation is successful.
 	 * 
 	 * @param name
 	 * @param age
 	 * @param email
 	 * @param stream
-	 * @return Response
+	 * @return boolean 
 	 */
-	@POST
-	@Path(value = "newstudent")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response createStudent(@FormDataParam(value = "name") String name, @FormDataParam(value = "age") String age,
-			@FormDataParam(value = "email") String email, @FormDataParam(value = "image") InputStream stream) {
+	public boolean createStudent(String name, String age, String email, byte[] imageBytes) {
 		try {
-			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-
 			Ocupation student = (Student) factory.getOcupation(OcupationType.STUDENT);
 
 			if (StudentValidator.validateStudent(name, age, email)) {
 				student.setName(name);
 				student.setAge(Integer.valueOf(age));
 				student.setEmail(email);
-				student.setImage(imageBytes(stream));
+				student.setImage(imageBytes);
 				studentTemplate.create(student);
-			}
-		} catch (StudentException e) {
-			logger.error(e.getMessage(), e);
-			try {
-				response.sendRedirect("/school/index.jsp");
-			} catch (IOException io) {
-				logger.error(io.getMessage(), io);
+				return true;
 			}
 
-		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
+		} catch (StudentException se) {
+			logger.error(se.getMessage(), se);
 		}
-
-		return Response.ok().build();
+		return false;
 	}
 
 	/**
-	 * Responds to HttpGET requests. Validates parameters from the Request if
-	 * invalid throws StudentException. Returns Student record from database.
-	 * Returns Response in APPLICATION_XML MediaType form.
+	 * Validates parameters from the Request if invalid throws StudentException. 
+	 * Returns Student record from database.
 	 * 
 	 * @param id
-	 * @return Response
+	 * @return Student
 	 */
-	@GET
-	@Path(value = "student/{id}")
-	@Produces(MediaType.APPLICATION_XML)
-	public Response getStudent(@PathParam(value = "id") String id) {
-		student = null;
+	public Student getStudent(String id) {
 		try {
-			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-
 			if (StudentValidator.validateId(id)) {
 				student = studentTemplate.getById(Integer.valueOf(id));
 			}
 		} catch (StudentException se) {
 			logger.error(se.getMessage(), se);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-		if (student != null) {
-			return Response.ok(student).build();
-		} else {
-			return Response.status(Response.Status.NOT_FOUND).build();
-		}
-	}
 
+		}
+		return student;
+	}
 	/**
-	 * Responds to HttpGET requests. Validates parameters from the Request if
-	 * invalid throws StudentException. Returns Student record from database.
-	 * Returns Response in APPLICATION_XML MediaType form.
+	 * Validates parameters if invalid throws StudentException. 
+	 * Returns Student record from database.
 	 * 
 	 * @param name
-	 * @return Response
+	 * @return Student
 	 */
-	@GET
-	@Path(value = "student/name/{name}")
-	@Produces(MediaType.APPLICATION_XML)
-	public Response getStudentByName(@PathParam(value = "name") String name) {
-		student = null;
-		try {
-			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
+	public Student getStudentByName(String name) {
 
+		try {
 			if (StudentValidator.validatePathName(name)) {
 				student = studentTemplate.getByName(name);
 			}
-		} catch (Exception e) {
+		} catch (StudentException e) {
 			logger.error(e.getMessage(), e);
 		}
-		if (student != null) {
-			return Response.ok(student).build();
-		} else {
-			return Response.status(Response.Status.NOT_FOUND).build();
-		}
+		return student;
 	}
 
 	/**
-	 * Responds to HttpPUT requests in MULTIPART_FORM_DATA MediaType form. Validates
-	 * parameters from the Request if invalid throws StudentException. Updates
+	 * Validates parameters from the Request if invalid throws StudentException. Updates
 	 * Student record in database.
 	 * 
 	 * @param id
 	 * @param name
 	 * @param age
 	 * @param email
-	 * @param stream
-	 * @return Response
+	 * @param stream 
 	 */
-	@PUT
-	@Path(value = "student")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response updateStudent(@FormDataParam(value = "id") String id, @FormDataParam(value = "name") String name,
-			@FormDataParam(value = "age") String age, @FormDataParam(value = "email") String email,
-			@FormDataParam(value = "image") InputStream stream) {
+	public void updateStudent(String id, String name, String age, String email) {
+
+		Ocupation student = factory.getOcupation(OcupationType.STUDENT);
 		try {
-			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-
-			Ocupation student = factory.getOcupation(OcupationType.STUDENT);
-
 			if (StudentValidator.validateStudent(id, name, age, email)) {
 				student.setId(Integer.valueOf(id));
 				student.setAge(Integer.valueOf(age));
@@ -191,97 +131,65 @@ public class StudentService {
 			}
 		} catch (StudentException se) {
 			logger.error(se.getMessage(), se);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
 		}
-		return Response.ok().build();
+
 	}
 
 	/**
-	 * Responds to HttpDELETE requests in MULTIPART_FORM_DATA MediaType form.
-	 * Validates parameters from the Request if invalid throws StudentException.
+	 * 
+	 * Validates parameters if invalid throws StudentException.
 	 * Deletes Student record from database.
 	 * 
 	 * @param id
 	 * @return Response
 	 */
-	@DELETE
-	@Path(value = "student")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response deleteStudent(@FormDataParam(value = "id") String id) {
+	public void deleteStudent(String id) {
 		try {
-			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-
 			if (StudentValidator.validateId(id)) {
 
 				studentTemplate.delete(Integer.valueOf(id));
 			}
-		} catch (StudentException se) {
-			logger.error(se.getMessage(), se);
-		} catch (Exception e) {
+		} catch (NumberFormatException e) {
+			logger.error(e.getMessage(), e);
+		} catch (StudentException e) {
 			logger.error(e.getMessage(), e);
 		}
-		return Response.ok().build();
+
 	}
 
-	/**
-	 * Responds to HttpGET requests. Validates parameters from the Request if
-	 * invalid throws StudentException. Returns image record from database. Returns
-	 * Response in APPLICATION_OCTET_STREAM MediaType form.
+	/**Validates parameters if invalid throws StudentException. 
+	 * Returns image record from database.
 	 * 
 	 * @param id
-	 * @return Response
+	 * @return
+	 * @throws StudentException
 	 */
-	@GET
-	@Path(value = "{id}/studentimage")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getStudentImage(@PathParam(value = "id") String id) {
-		Response r = null;
-
-		byte[] imageBytes = new byte[1024];
+	public byte[] getStudentImage(String id) {
 
 		try {
-			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 			if (StudentValidator.validateId(id)) {
-
 				Image img = ProxyImage.getProxyImage(Integer.valueOf(id), studentTemplate);
-
-				imageBytes = img.getImageBytes();
-
-				BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
-				if (imageBytes == null) {
-					r = Response.status(Response.Status.NO_CONTENT).build();
-				} else if (imageBytes != null && imageBytes.length > 0) {
-					r = Response.ok(imageBytes, MediaType.APPLICATION_OCTET_STREAM_TYPE).build();
-					bos.write(imageBytes);
-				}
+				return img.getImageBytes();
 			}
-		} catch (StudentException se) {
-			logger.error(se.getMessage(), se);
-		} catch (Exception e) {
+
+		} catch (StudentException e) {
 			logger.error(e.getMessage(), e);
 		}
-
-		return r;
+		return null;
 	}
 
 	/**
-	 * Responds to HttpPUT requests in MULTIPART_FORM_DATA MediaType form. Validates
+	 * Validates
 	 * parameters from the Request if invalid throws StudentException. Updates image
 	 * record in database.
 	 * 
 	 * @param id
 	 * @param stream
-	 * @return Response
+	 * 
 	 */
-	@PUT
-	@Path(value = "studentimage")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response setStudentImage(@FormDataParam(value = "id") String id,
-			@FormDataParam(value = "image") InputStream stream) {
+	public void setImage(String id, byte[] imageBytes) {
 		try {
-			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-			byte[] imageBytes = imageBytes(stream);
+
 			if (StudentValidator.validateId(id)) {
 				if (imageBytes.length > 0) {
 					studentTemplate.setImage(Integer.valueOf(id), imageBytes);
@@ -296,54 +204,24 @@ public class StudentService {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-		return Response.ok().build();
-	}
-
-	/**
-	 * Responds to HttpGET requests. Validates parameters from the Request if
-	 * invalid throws StudentException. Returns Student record from database. Fetch
-	 * a list of all Student records from database in xml form. Returns Response in
-	 * APPLICATION_XML MediaType form.
-	 * 
-	 * @return list
-	 */
-	@GET
-	@Path(value = "students")
-	@Produces(MediaType.APPLICATION_XML)
-	public List<Student> getAllStudents() {
-		try {
-			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
-
-			list = studentTemplate.getAllRecords();
-
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-		return list;
 
 	}
 
 	/**
-	 * Responds to HttpPUT requests in MULTIPART_FORM_DATA MediaType form. Validates
-	 * parameters from the Request if invalid throws StudentException. Inserts a
-	 * large list of records as batch update into database
+	 * Validates parameters from the Request if invalid throws StudentException.
+	 * Inserts a large list of records as batch update into database
 	 * 
 	 * 
 	 * @param batch
-	 * @return Response
+	 * 
 	 */
-	@PUT
-	@Path(value = "students")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response batchUpdate(@FormDataParam(value = "batch") List<Student> batch) {
-
+	public void batchUpdate(List<Student> batch) {
 		try {
 			if (batch.size() == 0) {
 				throw new IllegalArgumentException("Batch update can not be empty");
 
 			}
 
-			studentTemplate = (StudentJDBCTemplate) request.getServletContext().getAttribute("studentJDBCtemplate");
 			List<Student> students = batch;
 			Assert.notNull(students, "Batch update can not be null");
 			for (Student s : students) {
@@ -363,7 +241,17 @@ public class StudentService {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-		return Response.ok().build();
+
+	}
+
+	/** Returns a List of Student records from database. Fetch
+	 * a list of all Student records from database in xml form. 
+	 * 
+	 * @return list
+	 */
+	public List<Student> getAllRecords() {
+
+		return studentTemplate.getAllRecords();
 	}
 
 	/**
@@ -373,7 +261,7 @@ public class StudentService {
 	 * @param inputStream
 	 * @return array
 	 */
-	public static byte[] imageBytes(InputStream inputStream) {
+	public byte[] imageBytes(InputStream inputStream) {
 		StringBuffer img = new StringBuffer();
 
 		try (BufferedInputStream bos = new BufferedInputStream(inputStream)) {
@@ -393,5 +281,4 @@ public class StudentService {
 		}
 		return array;
 	}
-
 }

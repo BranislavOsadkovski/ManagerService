@@ -1,7 +1,7 @@
 /**
  * Copyright the original author or authors.
  */
-package com.school.enumerations;
+package com.school.validations;
 
 /**
  * An abstraction for Ocupation Type instances are immutable

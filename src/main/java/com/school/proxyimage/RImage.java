@@ -26,7 +26,7 @@ public class RImage {
 
 		this.image = new Image();
 		this.template = template;
-		this.image.setImageBytes(this.template.getStudentImage(id));
+		this.image.setImageBytes(this.template.getImage(id));
 		image.setImageId(id);
 
 	}

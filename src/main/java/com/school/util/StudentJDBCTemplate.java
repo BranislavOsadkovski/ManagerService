@@ -26,7 +26,6 @@ import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.util.Assert;
  
 import com.school.interfaces.Ocupation;
-import com.school.interfaces.DAO;
 import com.school.objects.Student;
 
 /**
@@ -73,7 +72,7 @@ public class StudentJDBCTemplate implements DAO<Student> {
 	 * @param email
 	 * @param image
 	 */
-	@Override
+	@Override 
 	public void create(Ocupation student) {
 		Assert.notNull(student, "Student object can not be null");
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -281,5 +280,7 @@ public class StudentJDBCTemplate implements DAO<Student> {
 		}
 
 	}
+
+	
 
 }

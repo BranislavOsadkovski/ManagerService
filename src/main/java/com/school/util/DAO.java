@@ -1,9 +1,10 @@
-package com.school.interfaces;
+package com.school.util;
 
 import java.util.List;
 
 import javax.sql.DataSource;
- 
+
+import com.school.interfaces.Ocupation;
 
 /**
  * @author Branislav
@@ -26,7 +27,7 @@ public interface DAO<T> {
 	public void setDataSource(DataSource data);
 
 	/**
-	 * Saves new @T record into database 
+	 * Saves new @T record into database
 	 */
 	public void create(Ocupation ocupation);
 
@@ -49,7 +50,7 @@ public interface DAO<T> {
 	/**
 	 * Updates record
 	 */
-	public void update(Ocupation pcupation);
+	public void update(Ocupation ocupation);
 
 	/**
 	 * Deletes @T record from database by passed @id

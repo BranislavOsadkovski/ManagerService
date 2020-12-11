@@ -15,11 +15,7 @@ public class Image implements ImageInterface {
 
 	private int id;
 	private byte[] imageBytes;
-
-	/**
-	 * @param id2
-	 * @param bytes must not be null
-	 */
+ 
 	/**
 	 * @param id2
 	 * @param bytes must not be null
@@ -58,9 +54,8 @@ public class Image implements ImageInterface {
 	 * @return id
 	 */
 	@Override
-	public int getImageId() {
-		// TODO Auto-generated method stub
-		return this.id;
+	public int getImageId() { 
+		return this.id; 
 	}
 
 	/**
