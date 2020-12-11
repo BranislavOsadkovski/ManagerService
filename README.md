@@ -1,5 +1,5 @@
 # StudentManager
-jersey REST API with Spring Core DI and Spring JDBC data repository 
+**jersey REST API with Spring Core DI and Spring JDBC data repository 
 
 REST API system for storing students data
 name,
