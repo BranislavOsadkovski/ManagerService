@@ -1,10 +1,9 @@
 package com.school.listeners;
- 
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import org.apache.log4j.Logger;
 import com.school.util.ApplicationManager;
-import com.school.util.StudentJDBCTemplate;
 
 /**
  * ServletContextHandler receives notification events about ServletContext
@@ -16,7 +15,6 @@ import com.school.util.StudentJDBCTemplate;
  */
 public class ServletContextHandler implements ServletContextListener {
 
-	private StudentJDBCTemplate studentJDBCTemplate;
 	private final static Logger logger = Logger.getLogger(ServletContextHandler.class);
 
 	/**
@@ -34,8 +32,7 @@ public class ServletContextHandler implements ServletContextListener {
 
 		try {
 			logger.warn("Initializing Database Connection");
-			studentJDBCTemplate = (StudentJDBCTemplate) ApplicationManager.getSpringAppContext()
-					.getBean("studentJDBCTemplate");
+			ApplicationManager.getSpringAppContext().getBean("studentJDBCTemplate");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -49,8 +46,7 @@ public class ServletContextHandler implements ServletContextListener {
 	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		logger.info("Destroying Context");
-
+		logger.info("Destroying Context"); 
 		ApplicationManager.closeSpringApplicationContext();
 	}
 
