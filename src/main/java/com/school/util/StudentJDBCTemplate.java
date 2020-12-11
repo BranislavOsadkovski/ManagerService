@@ -39,7 +39,7 @@ public class StudentJDBCTemplate implements DAO<Student> {
 	private JdbcTemplate jdbcTemplate;
 	private DataSource dataSource;
 	private SimpleJdbcInsert jdbcInsert; // multi-threaded reusable object providing easy insert capabilities for a table
-	final static Logger logger = Logger.getLogger(StudentJDBCTemplate.class);
+	private final static Logger logger = Logger.getLogger(StudentJDBCTemplate.class);
 
 	/**
 	 * Set DataSource data
