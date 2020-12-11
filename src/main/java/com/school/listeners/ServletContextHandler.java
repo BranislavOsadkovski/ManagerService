@@ -1,6 +1,5 @@
 package com.school.listeners;
-
-import javax.servlet.ServletContext;
+ 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import org.apache.log4j.Logger;
@@ -35,7 +34,7 @@ public class ServletContextHandler implements ServletContextListener {
 
 		try {
 			logger.warn("Initializing Database Connection");
-			this.studentJDBCTemplate = (StudentJDBCTemplate) ApplicationManager.getSpringAppContext()
+			studentJDBCTemplate = (StudentJDBCTemplate) ApplicationManager.getSpringAppContext()
 					.getBean("studentJDBCTemplate");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
