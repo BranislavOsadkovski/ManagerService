@@ -3,7 +3,7 @@
  */
 package com.school.proxyimage;
 
-import com.school.objects.Image;
+import com.school.objects.ImageImpl;
 import com.school.util.StudentJDBCTemplate;
 
 /**
@@ -12,7 +12,7 @@ import com.school.util.StudentJDBCTemplate;
  */
 public class RImage {
 
-	private Image image;
+	private ImageImpl image;
 	private StudentJDBCTemplate template;
 
 	/**
@@ -24,7 +24,7 @@ public class RImage {
 	 */
 	public RImage(int id, StudentJDBCTemplate template) {
 
-		this.image = new Image();
+		this.image = new ImageImpl();
 		this.template = template;
 		this.image.setImageBytes(this.template.getImage(id));
 		image.setImageId(id);
@@ -36,7 +36,7 @@ public class RImage {
 	 * 
 	 * @return image
 	 */
-	public Image getRealImage() {
+	public ImageImpl getRealImage() {
 		return this.image;
 	}
 }

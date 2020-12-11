@@ -13,7 +13,7 @@
 		<property name="driverClassName"
 			value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://localhost/test?serverTimezone=UTC" />
+			value="jdbc:mysql://localhost/springschool?serverTimezone=UTC" />
 
 		<property name="username" value="root" />
 		<property name="password" value="" />

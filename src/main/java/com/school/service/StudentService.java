@@ -12,8 +12,8 @@ import org.springframework.util.Assert;
 
 import com.school.factories.AbstractFactory;
 import com.school.factories.OcupationFactory;
-import com.school.interfaces.Ocupation;
-import com.school.objects.Image;
+import com.school.objects.ImageImpl;
+import com.school.objects.Ocupation;
 import com.school.objects.Student;
 import com.school.proxyimage.ProxyImage;
 import com.school.util.StudentJDBCTemplate;
@@ -168,7 +168,7 @@ public class StudentService {
 
 		try {
 			if (StudentValidator.validateId(id)) {
-				Image img = ProxyImage.getProxyImage(Integer.valueOf(id), studentTemplate);
+				ImageImpl img = ProxyImage.getProxyImage(Integer.valueOf(id), studentTemplate);
 				return img.getImageBytes();
 			}
 

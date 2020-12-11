@@ -24,8 +24,8 @@ import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.util.Assert;
- 
-import com.school.interfaces.Ocupation;
+
+import com.school.objects.Ocupation;
 import com.school.objects.Student;
 
 /**

@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.school.interfaces.Ocupation;
+import com.school.objects.Ocupation;
 
 /**
  * @author Branislav

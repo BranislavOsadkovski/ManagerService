@@ -3,8 +3,8 @@
  */
 package com.school.factories;
 
+import com.school.objects.Ocupation;
 import com.school.validations.OcupationType;
-import com.school.interfaces.Ocupation;
 
 /**
  * Abstract implementation of a base class used for OcupationFactories

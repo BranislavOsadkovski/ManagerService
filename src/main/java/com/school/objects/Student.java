@@ -3,8 +3,6 @@ package com.school.objects;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.school.interfaces.Ocupation;
-
 /**
  * Student class to represent Student object
  * 
@@ -13,6 +11,7 @@ import com.school.interfaces.Ocupation;
  */
 @XmlRootElement(name = "student")
 public class Student implements Ocupation {
+	
 	private int id;
 	private String name;
 	private int age;

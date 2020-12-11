@@ -3,7 +3,7 @@
  */
 package com.school.proxyimage;
 
-import com.school.objects.Image;
+import com.school.objects.ImageImpl;
 import com.school.util.StudentJDBCTemplate;
 
 /**
@@ -16,7 +16,7 @@ import com.school.util.StudentJDBCTemplate;
  */
 public class ProxyImage {
 	private static int imgId = 0;
-	private static Image image;
+	private static ImageImpl image;
 	private static RImage rimage;
 
 	public ProxyImage() {
@@ -31,7 +31,7 @@ public class ProxyImage {
 	 * @param template must not be null
 	 * @return image
 	 */
-	public static Image getProxyImage(int id, StudentJDBCTemplate template) {
+	public static ImageImpl getProxyImage(int id, StudentJDBCTemplate template) {
 
 		if (imgId != id) {
 			imgId = id;

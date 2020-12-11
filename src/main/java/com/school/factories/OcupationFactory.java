@@ -4,7 +4,7 @@
 package com.school.factories;
 
 import com.school.validations.OcupationType;
-import com.school.interfaces.Ocupation;
+import com.school.objects.Ocupation;
 import com.school.objects.Student;
 
 /**
