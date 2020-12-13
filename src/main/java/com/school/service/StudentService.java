@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import com.school.factories.AbstractFactory;
@@ -28,16 +29,16 @@ import com.school.validations.StudentValidator;
 public class StudentService {
 
 	final static Logger logger = Logger.getLogger(StudentService.class);
-	private final StudentJDBCTemplate studentTemplate;
+	private   StudentJDBCTemplate studentTemplate;
 	private Student student;
 	private final AbstractFactory factory = new OcupationFactory();
-
+ 
 	/**
-	 * @param template must not be null
+	 * @param studentTemplate the studentTemplate to set
 	 */
-	public StudentService(StudentJDBCTemplate template) {
-		super();
-		this.studentTemplate = template;
+	@Autowired(required = true)
+	public void setStudentTemplate(StudentJDBCTemplate studentTemplate) {
+		this.studentTemplate = studentTemplate;
 	}
 
 	/**
@@ -65,6 +66,8 @@ public class StudentService {
 			}
 
 		} catch (StudentException se) {
+			logger.error(se.getMessage(), se);
+		}catch (Exception se) {
 			logger.error(se.getMessage(), se);
 		}
 		return false;

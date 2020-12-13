@@ -11,7 +11,7 @@
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName"
-			value="com.mysql.jdbc.Driver" />
+			value="com.mysql.cj.jdbc.Driver" />
 		<property name="url"
 			value="jdbc:mysql://localhost/springschool?serverTimezone=UTC" />
 
@@ -23,14 +23,13 @@
 		class="com.school.util.StudentJDBCTemplate">
 	</bean>
 	
-	<bean id="studentController"
-		class="com.school.controller.StudentController" autowire="constructor">
-		<constructor-arg ref="studentService"/>
-	</bean>	
-	
 	<bean id="studentService"
-		class="com.school.service.StudentService" autowire="constructor">
-		<constructor-arg ref="studentJDBCTemplate"/>
+		class="com.school.service.StudentService" >
+		 
 	</bean>
-
+	
+	<bean id="studentController"
+		class="com.school.controllers.StudentController">
+	</bean>
+ 
 </beans>

@@ -1,5 +1,6 @@
-DROP DATABASE IF EXISTS `test`;
-CREATE DATABASE `test`; 
+DROP DATABASE IF EXISTS `springschool`;
+CREATE DATABASE `springschool`; 
+USE `springschool`;
 DROP TABLE IF EXISTS `student`;
 CREATE TABLE `student` (id INT PRIMARY KEY AUTO_INCREMENT,name VARCHAR(50) NOT NULL,
 age int NOT NULL,email varchar(30) NOT NULL,image mediumblob)engine=INNODB;

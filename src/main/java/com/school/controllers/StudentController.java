@@ -1,12 +1,10 @@
 package com.school.controllers;
  
-import java.io.BufferedOutputStream;
-import java.io.IOException;
+import java.io.BufferedOutputStream; 
 import java.io.InputStream;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton; 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,7 +19,8 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-  
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.school.objects.Student; 
 import com.school.service.StudentService; 
 
@@ -33,43 +32,36 @@ import com.school.service.StudentService;
  * @author Branislav
  *
  */
-@Singleton
-@Path(value = "StudentService")
+@Path(value = "studentservice")
 public class StudentController {
 	final static Logger logger = Logger.getLogger(StudentController.class);
 	private Student student;
-	private List<Student> list;
-	private @Inject HttpServletResponse response;  
-	private final StudentService studentService;
-
-	/**
-	 * @param studentService must not be null
-	 */
-	public StudentController(StudentService studentService) {
-		super();
+	private List<Student> list; 
+	private HttpServletResponse response;  
+ 	private StudentService studentService; 
+ 	
+	@Autowired(required = true)
+	public void setStudentService(StudentService studentService) {
 		this.studentService = studentService;
 	}
-
-
+ 
+	/**
+	 * @param studentService must not be null
+	 */  
 	@POST
 	@Path(value = "newstudent")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response createStudent(@FormDataParam(value = "name") String name, @FormDataParam(value = "age") String age,
-			@FormDataParam(value = "email") String email, @FormDataParam(value = "image") InputStream stream) {
+	public Response createStudent(@FormDataParam(value = "name") String name, 
+			@FormDataParam(value = "age") String age,
+			@FormDataParam(value = "email") String email, 
+			@FormDataParam(value = "image") InputStream stream) {
 
 		if (studentService.createStudent(name, age, email, studentService.imageBytes(stream))) {
 
 			return Response.ok().build();
 			
-		} else {
-
-			try {
-				response.sendRedirect("/school/index.jsp");
-			} catch (IOException io) {
-				logger.error(io.getMessage(), io);
-			}
-
-		}
+		} 
+		
 		return Response.serverError().build();
 	}
 
