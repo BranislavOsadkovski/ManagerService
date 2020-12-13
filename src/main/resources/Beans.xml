@@ -22,14 +22,11 @@
 	<bean id="studentJDBCTemplate"
 		class="com.school.util.StudentJDBCTemplate">
 	</bean>
-	
+
 	<bean id="studentService"
-		class="com.school.service.StudentService" >
-		 
+		class="com.school.service.StudentService" autowire="constructor">
+		<constructor-arg ref="studentJDBCTemplate" />
 	</bean>
 	
-	<bean id="studentController"
-		class="com.school.controllers.StudentController">
-	</bean>
  
 </beans>

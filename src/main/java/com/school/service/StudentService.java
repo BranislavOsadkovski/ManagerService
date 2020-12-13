@@ -29,28 +29,28 @@ import com.school.validations.StudentValidator;
 public class StudentService {
 
 	final static Logger logger = Logger.getLogger(StudentService.class);
-	private   StudentJDBCTemplate studentTemplate;
+	private StudentJDBCTemplate studentTemplate;
 	private Student student;
 	private final AbstractFactory factory = new OcupationFactory();
- 
+
 	/**
 	 * @param studentTemplate the studentTemplate to set
 	 */
 	@Autowired(required = true)
-	public void setStudentTemplate(StudentJDBCTemplate studentTemplate) {
+	public StudentService(StudentJDBCTemplate studentTemplate) {
 		this.studentTemplate = studentTemplate;
 	}
 
 	/**
 	 * Validates parameters from the Request if invalid throws StudentException.
-	 * Creates Student object and saves it into database.
-	 * Returns true if operation is successful.
+	 * Creates Student object and saves it into database. Returns true if operation
+	 * is successful.
 	 * 
 	 * @param name
 	 * @param age
 	 * @param email
 	 * @param stream
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public boolean createStudent(String name, String age, String email, byte[] imageBytes) {
 		try {
@@ -67,14 +67,14 @@ public class StudentService {
 
 		} catch (StudentException se) {
 			logger.error(se.getMessage(), se);
-		}catch (Exception se) {
+		} catch (Exception se) {
 			logger.error(se.getMessage(), se);
 		}
 		return false;
 	}
 
 	/**
-	 * Validates parameters from the Request if invalid throws StudentException. 
+	 * Validates parameters from the Request if invalid throws StudentException.
 	 * Returns Student record from database.
 	 * 
 	 * @param id
@@ -91,9 +91,10 @@ public class StudentService {
 		}
 		return student;
 	}
+
 	/**
-	 * Validates parameters if invalid throws StudentException. 
-	 * Returns Student record from database.
+	 * Validates parameters if invalid throws StudentException. Returns Student
+	 * record from database.
 	 * 
 	 * @param name
 	 * @return Student
@@ -111,14 +112,14 @@ public class StudentService {
 	}
 
 	/**
-	 * Validates parameters from the Request if invalid throws StudentException. Updates
-	 * Student record in database.
+	 * Validates parameters from the Request if invalid throws StudentException.
+	 * Updates Student record in database.
 	 * 
 	 * @param id
 	 * @param name
 	 * @param age
 	 * @param email
-	 * @param stream 
+	 * @param stream
 	 */
 	public void updateStudent(String id, String name, String age, String email) {
 
@@ -140,8 +141,8 @@ public class StudentService {
 
 	/**
 	 * 
-	 * Validates parameters if invalid throws StudentException.
-	 * Deletes Student record from database.
+	 * Validates parameters if invalid throws StudentException. Deletes Student
+	 * record from database.
 	 * 
 	 * @param id
 	 * @return Response
@@ -160,8 +161,9 @@ public class StudentService {
 
 	}
 
-	/**Validates parameters if invalid throws StudentException. 
-	 * Returns image record from database.
+	/**
+	 * Validates parameters if invalid throws StudentException. Returns image record
+	 * from database.
 	 * 
 	 * @param id
 	 * @return
@@ -182,9 +184,8 @@ public class StudentService {
 	}
 
 	/**
-	 * Validates
-	 * parameters from the Request if invalid throws StudentException. Updates image
-	 * record in database.
+	 * Validates parameters from the Request if invalid throws StudentException.
+	 * Updates image record in database.
 	 * 
 	 * @param id
 	 * @param stream
@@ -247,14 +248,20 @@ public class StudentService {
 
 	}
 
-	/** Returns a List of Student records from database. Fetch
-	 * a list of all Student records from database in xml form. 
+	/**
+	 * Returns a List of Student records from database. Fetch a list of all Student
+	 * records from database in xml form.
 	 * 
 	 * @return list
 	 */
 	public List<Student> getAllRecords() {
-
-		return studentTemplate.getAllRecords();
+		List<Student> list = null;
+		try {
+			list = studentTemplate.getAllRecords();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return list;
 	}
 
 	/**

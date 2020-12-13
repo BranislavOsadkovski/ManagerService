@@ -18,36 +18,22 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.glassfish.jersey.media.multipart.FormDataParam; 
 
 import com.school.objects.Student; 
-import com.school.service.StudentService; 
-
-/**
- * StudentService class is a Web Service class and its methods receive
- * HttpRequests on paths mapped by javax.ws.rs.Path annotations and send
- * HttpResponse to client after they are processed
- * 
- * @author Branislav
- *
- */
+import com.school.service.StudentService;
+import com.school.util.ApplicationManager; 
+ 
 @Path(value = "studentservice")
 public class StudentController {
 	final static Logger logger = Logger.getLogger(StudentController.class);
 	private Student student;
 	private List<Student> list; 
 	private HttpServletResponse response;  
- 	private StudentService studentService; 
+	/*Injecting StudentService with SpringContext because jersey configuration is managing Constructor and Setter methods for StudentController */
+ 	private StudentService studentService = (StudentService) ApplicationManager.getSpringAppContext().getBean("studentService");;
  	
-	@Autowired(required = true)
-	public void setStudentService(StudentService studentService) {
-		this.studentService = studentService;
-	}
  
-	/**
-	 * @param studentService must not be null
-	 */  
 	@POST
 	@Path(value = "newstudent")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -91,8 +77,7 @@ public class StudentController {
 			return Response.status(Response.Status.NOT_FOUND).build();
 		}
 	}
-
-	
+ 
 	@PUT
 	@Path(value = "student")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -154,7 +139,14 @@ public class StudentController {
 		return Response.ok().build();
 	}
 
-	
+	@GET
+	@Path(value = "ss")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String ss() {
+		 
+		return "yaaaas";
+
+	}
 	@GET
 	@Path(value = "students")
 	@Produces(MediaType.APPLICATION_XML)
@@ -165,10 +157,9 @@ public class StudentController {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-		return list;
-
+		return list; 
 	}
-
+	 
 	@PUT
 	@Path(value = "students")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
