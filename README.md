@@ -1,5 +1,7 @@
 # StudentManager
-**jersey REST API with Spring Core DI and Spring JDBC data repository 
+** jersey REST API with Spring Core DI and Spring JDBC data repository **
+
+JDBC is a low level standard for interaction with databases. Spring Data JDBC has less abstractions than Spring Data JPA, but uses Spring Data concepts to make it easier to do CRUD operations. JDBC allows you to do more things with the Database directly, but it requires more attention.
 
 REST API system for storing students data
 name,
