@@ -11,7 +11,7 @@
 
 	<developers>
 		<developer>
-			<id>baneosad</id>
+			<id>bane_osad</id>
 			<name>Branislav Osadkovski</name>
 			<email>osadkovski.b(at)gmail.com</email>
 			<organization></organization>
@@ -23,12 +23,21 @@
 		</developer>
 	</developers> 
 	<dependencies>
+		<!-- Test Support -->	
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Spring Support -->
+		<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>4.1.4.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
@@ -39,12 +48,16 @@
 			<artifactId>spring-context</artifactId>
 			<version>4.1.4.RELEASE</version>
 		</dependency>
+		
+		<!-- Data Support -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.19</version>
 			<scope>runtime</scope>
 		</dependency>
+		
+		<!-- Jersey JAX-RS Support -->
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>

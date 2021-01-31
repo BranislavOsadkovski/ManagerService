@@ -4,7 +4,6 @@ import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,9 +30,9 @@ public class StudentController {
 	private List<Student> list; 
 	private HttpServletResponse response;  
 	/*Injecting StudentService with SpringContext because jersey configuration is managing Constructor and Setter methods for StudentController */
- 	private StudentService studentService = (StudentService) ApplicationManager.getSpringAppContext().getBean("studentService");;
+ 	private StudentService studentService = (StudentService) ApplicationManager.getSpringAppContext().getBean("studentService");
  	
- 
+ 	
 	@POST
 	@Path(value = "newstudent")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -41,9 +40,8 @@ public class StudentController {
 			@FormDataParam(value = "age") String age,
 			@FormDataParam(value = "email") String email, 
 			@FormDataParam(value = "image") InputStream stream) {
-
+			
 		if (studentService.createStudent(name, age, email, studentService.imageBytes(stream))) {
-
 			return Response.ok().build();
 			
 		} 
