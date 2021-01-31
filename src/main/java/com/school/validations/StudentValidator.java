@@ -140,7 +140,7 @@ public class StudentValidator {
 	 * @throws StudentException
 	 */
 	public static boolean validatePathName(String name) throws StudentException {
-		Assert.notNull(name,"name can not be null");
+		Assert.notNull(name,"Name can not be null");
 		pattern = Pattern.compile("a-zA-Z");
 		matcher = pattern.matcher(name);
 		if (matcher.find()) {

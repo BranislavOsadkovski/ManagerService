@@ -35,14 +35,24 @@ public class EntityTest {
 	
 	@Test
 	public void testStudent() { 
-		Student student = new Student(1,"test_name",20,"test_email",new byte[] {1,1,1});
+		Student student = new Student(1,"test_name",20,"test_email",null);
 		
 		Assert.assertEquals(student.getId(), test_student.getId());
 		Assert.assertEquals(student.getName(), test_student.getName());
 		Assert.assertEquals(student.getAge(),test_student.getAge());
 		Assert.assertEquals(student.getEmail(),test_student.getEmail());
+		Assert.assertNull(student.getImage());
 		Assert.assertNotNull(test_student.getImage());
 		
+	}
+	
+	@Test
+	public void testImage() {
+		ImageImpl image = new ImageImpl(1,null);
+		
+		Assert.assertEquals(image.getImageId(), test_image.getImageId());
+		Assert.assertNull(image.getImageBytes());
+		Assert.assertNotNull(test_image.getImageBytes());
 	}
 
 }
