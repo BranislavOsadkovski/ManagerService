@@ -24,4 +24,4 @@ through exposed public HTTP methods
 * GET - StudentService/{id}/studentimage - returns student image from database
 * PUT - StudentService/studentimage - creates new or updates student image
 * GET - StudentService/students - returns list of all students
-* PUT - StudentService/students - inserts a large batch of updates received by XML file
+* PUT - StudentService/students - executes a large batch of data updates
