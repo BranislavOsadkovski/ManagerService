@@ -13,7 +13,7 @@
 
 Spring Data JDBC does not have a persistence context like Spring Data JPA. This makes Spring Data JDBC in my opinion more straightforward than Spring Data JPA. If you want to make changes to the data, you are responsible for handling the persistence.
 
-## REST API system for students data management
+## RESTful API system for students data management
 through exposed public HTTP methods
 
 * POST - StudentService/newstudent -creates new student
