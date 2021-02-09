@@ -1,4 +1,4 @@
-# StudentManager
+# Student Manager
 **Java EE web app implementing Jersey JAX-RS RESTful API and Spring Data JDBC for data management repository through Spring Core Dependency Injection**
 
 * JDBC is a low level standard for interaction with databases. Spring Data JDBC has less abstractions than Spring Data JPA, but uses Spring Data concepts to make it easier to do CRUD operations. JDBC allows you to do more things with the Database directly, but it requires more attention.
