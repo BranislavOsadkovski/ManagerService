@@ -22,6 +22,6 @@ through exposed public HTTP methods
 * PUT - StudentService/student - updates student record with new values
 * DELETE -StudentService/student -deletes student
 * GET - StudentService/{id}/studentimage - returns student image from database
-* PUT - StudentService/studentimage - creates new or updates student image
-* GET - StudentService/students - returns list of all students
+* PUT - StudentService/studentimage - creates new or updates record image
+* GET - StudentService/students - returns list of all record
 * PUT - StudentService/students - executes a large batch of data updates
