@@ -2,7 +2,6 @@ package com.school.validations;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.springframework.util.Assert;
 
 /**
@@ -25,9 +24,9 @@ public class StudentValidator {
 	 * @throws StudentException
 	 */
 	public static boolean validateStudent(String name, String age, String email) throws StudentException {
-		valid = validateEmail(email);
-		valid = validateAge(age);
 		valid = validateName(name);
+		valid = validateAge(age);
+		valid = validateEmail(email);
 		return valid;
 	}
 
@@ -41,53 +40,10 @@ public class StudentValidator {
 	 * @throws StudentException
 	 */
 	public static boolean validateStudent(String id, String name, String age, String email) throws StudentException {
-		valid = validateId(id);
+		valid = validateId(id); 
+		valid = validateName(name); 
+		valid = validateAge(age);		
 		valid = validateEmail(email);
-		valid = validateAge(age);
-		valid = validateName(name);
-
-		return valid;
-	}
-
-	/**
-	 * Check if email is valid if not throws StudentException
-	 * @param email
-	 * @return valid
-	 * @throws StudentException
-	 */
-	public static boolean validateEmail(String email) throws StudentException {
-		Assert.notNull(email,"email can not be null");
-		pattern = Pattern.compile("^(.+)@(.+)$");
-		matcher = pattern.matcher(email);
-		if (!matcher.find()) {
-			valid = false;
-			throw new StudentException("Invalid email;");
-		} else {
-			valid = true;
-		}
-
-		return valid;
-	}
-
-	/**
- 	 * Check if age is valid if not throws StudentException
-	 * @param age
-	 * @return valid
-	 * @throws StudentException
-	 */
-	public static boolean validateAge(String age) throws StudentException {
-		Assert.notNull(age,"age can not be null");
-		pattern = Pattern.compile("^[0-9]*$");
-		matcher = pattern.matcher(age);
-		 if (age.isEmpty()) {
-			valid = false;
-			throw new StudentException("Age value can not be empty;");
-		} else if (!matcher.find()) {
-			valid = false;
-			throw new StudentException("Age value can not contain characters; Must be a number;");
-		} else {
-			valid = true;
-		}
 		return valid;
 	}
 
@@ -152,5 +108,47 @@ public class StudentValidator {
 
 		return valid;
 	}
- 
+	/**
+ 	 * Check if age is valid if not throws StudentException
+	 * @param age
+	 * @return valid
+	 * @throws StudentException
+	 */
+	public static boolean validateAge(String age) throws StudentException {
+		Assert.notNull(age,"age can not be null");
+		pattern = Pattern.compile("^[0-9]*$");
+		matcher = pattern.matcher(age);
+		 if (age.isEmpty()) {
+			valid = false;
+			throw new StudentException("Age value can not be empty;");
+		} else if (!matcher.find()) {
+			valid = false;
+			throw new StudentException("Age value can not contain characters; Must be a number;");
+		} else {
+			valid = true;
+		}
+		return valid;
+	}
+	/**
+	 * Check if email is valid if not throws StudentException
+	 * @param email
+	 * @return valid
+	 * @throws StudentException
+	 */
+	public static boolean validateEmail(String email) throws StudentException {
+		Assert.notNull(email,"email can not be null");
+		pattern = Pattern.compile("^(.+)@(.+)$");
+		matcher = pattern.matcher(email);
+		if (!matcher.find()) {
+			valid = false;
+			throw new StudentException("Invalid email;");
+		} else {
+			valid = true;
+		}
+
+		return valid;
+	}
+
+
+
 }
