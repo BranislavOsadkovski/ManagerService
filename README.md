@@ -1,5 +1,5 @@
 # Student Manager
-Simple but powerfull implementation of SpringJDBC
+Simple, but powerfull implementation of SpringJDBC
 
 **Java EE web app implementing Jersey JAX-RS RESTful API and Spring Data JDBC for data management repository through Spring Core Dependency Injection. Emphasizing Spring frameworks solution to the problem of interaction with container management of object instances and minimizing coupling structure**
 
