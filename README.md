@@ -18,12 +18,12 @@ Spring Data JDBC does not have a persistence context like Spring Data JPA. This 
 ## RESTful API system for students data management
 through exposed public HTTP methods
 
-* POST - StudentService/newstudent -creates new record
-* GET - StudentService/student/{id} -returns record with the requsted id
-* GET - StudentService/student/{name} -returns record with the same name
+* POST - StudentService/newstudent - creates a new record
+* GET - StudentService/student/{id} - returns record with the requsted id
+* GET - StudentService/student/{name} - returns record with the same name
 * PUT - StudentService/student - updates record with new values
-* DELETE -StudentService/student -deletes record
+* DELETE -StudentService/student - deletes record
 * GET - StudentService/{id}/studentimage - returns record image from database
 * PUT - StudentService/studentimage - creates new or updates record image
-* GET - StudentService/students - returns list of all record
+* GET - StudentService/students - returns a list of all record
 * PUT - StudentService/students - executes a large batch of data updates
